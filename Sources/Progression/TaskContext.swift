@@ -1,3 +1,11 @@
+//
+//  TaskContext.swift
+//  Progression
+//
+//  Created by Mark Onyschuk on 1/13/26.
+//  Copyright © 2026 by Dimension North Inc, All Rights Reserved.
+//
+
 /// Context provided to async tasks for reporting progress and creating subtasks.
 ///
 /// The task context is the primary interface between your async functions

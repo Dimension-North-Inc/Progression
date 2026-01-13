@@ -1,3 +1,11 @@
+//
+//  TaskExecutor.swift
+//  Progression
+//
+//  Created by Mark Onyschuk on 1/13/26.
+//  Copyright © 2026 by Dimension North Inc, All Rights Reserved.
+//
+
 import Foundation
 
 /// Internal implementation of TaskContext that delegates to the executor actor.
@@ -27,7 +35,7 @@ final class TaskContextImpl: @unchecked Sendable, TaskContext {
 public actor TaskExecutor {
     private var tasks: [UUID: TaskNode] = [:]
     private var currentNodeID: UUID?
-    
+
     private var pauseContinuations: [UUID: CheckedContinuation<Void, Never>] = [:]
     private var streamContinuations: [UUID: AsyncStream<TaskGraph>.Continuation] = [:]
 
@@ -135,7 +143,7 @@ public actor TaskExecutor {
 
         // Schedule removal after brief visibility
         Task {
-            try? await Task.sleep(nanoseconds: 1_000_000_000)  // 1 second
+            try? await Task.sleep(nanoseconds: 1_000_000_000) // 1 second
             // Only remove if still cancelled (not restarted)
             if case .cancelled = task.status {
                 tasks.removeValue(forKey: taskID)
@@ -203,16 +211,16 @@ public actor TaskExecutor {
         tasks = tasks.filter { _, task in
             // Keep running tasks
             if task.isRunning { return true }
-            
+
             // Keep failed or cancelled tasks (require manual dismissal)
             if case .failed = task.status { return true }
             if case .cancelled = task.status { return true }
-            
+
             // Only auto-cleanup truly completed tasks
             if case .completed = task.status, let completedAt = task.completedAt {
                 return completedAt.timeIntervalSinceReferenceDate >= cutoff
             }
-            
+
             return true
         }
 
@@ -470,7 +478,7 @@ public struct TaskSnapshot: Identifiable, Sendable, Equatable {
         if let progress = progress {
             hash ^= Int(progress * 1000)
         } else {
-            hash ^= -1  // Indeterminate marker
+            hash ^= -1 // Indeterminate marker
         }
         hash ^= status.hashValue
         hash ^= isPaused.hashValue
@@ -492,12 +500,12 @@ public struct TaskSnapshot: Identifiable, Sendable, Equatable {
     }
 
     public static func == (lhs: TaskSnapshot, rhs: TaskSnapshot) -> Bool {
-        lhs.id == rhs.id &&
-        lhs.progress == rhs.progress &&
-        lhs.status == rhs.status &&
-        lhs.isPaused == rhs.isPaused &&
-        lhs.stepName == rhs.stepName &&
-        lhs.children == rhs.children &&
-        lhs.errorDescription == rhs.errorDescription
+        lhs.id == rhs.id
+            && lhs.progress == rhs.progress
+            && lhs.status == rhs.status
+            && lhs.isPaused == rhs.isPaused
+            && lhs.stepName == rhs.stepName
+            && lhs.children == rhs.children
+            && lhs.errorDescription == rhs.errorDescription
     }
 }

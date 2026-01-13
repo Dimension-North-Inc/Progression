@@ -1,102 +1,160 @@
-import Foundation
+//
+//  TaskProgressContainer.swift
+//  Progression
+//
+//  Created by Mark Onyschuk on 1/13/26.
+//  Copyright © 2026 by Dimension North Inc, All Rights Reserved.
+//
+
 import SwiftUI
 import Progression
 
-// MARK: - Task Progress View
+// MARK: - Progress Container
 
-/// A hierarchical tree view for displaying all tasks in an executor.
+/// An abstract view that coordinates with a task executor and provides
+/// task snapshots to a content closure.
 ///
-/// This view automatically updates when tasks are added, removed, or their
-/// state changes. It displays tasks with their progress bars, step names,
-/// and action buttons.
+/// This type handles the infrastructure of observing the executor's
+/// progress stream, while delegating the actual rendering to the content
+/// closure. This separation allows different layout implementations
+/// to be used with the same executor coordination logic.
 ///
-/// ## Usage
+/// ## Example
 ///
 /// ```swift
-/// // Default layout (name above progress bar)
-/// TaskProgressView(executor: myExecutor)
-///
-/// // Custom layout using a ViewBuilder closure
-/// TaskProgressView(executor: myExecutor) { task in
-///     HStack {
+/// ProgressContainer(executor: myExecutor) { tasks in
+///     ForEach(tasks) { task in
 ///         Text(task.name)
-///         ProgressBarView(progress: Double(task.progress ?? 0))
 ///     }
 /// }
 /// ```
-///
-/// ## Alternative Layouts
-///
-/// ```swift
-/// // Progress bar above task name
-/// TaskProgressView.progressAbove(executor: myExecutor)
-///
-/// // Compact layout with inline progress
-/// TaskProgressView.compact(executor: myExecutor)
-/// ```
-///
-/// ## Topics
-///
-/// ### Types
-///
-/// - ``DefaultRowContent`` - The default row layout
 @MainActor
-public struct TaskProgressView<Content: View>: View {
+public struct ProgressContainer<Content: View>: View {
     /// The task executor to observe.
     public let executor: TaskExecutor
 
-    /// A closure that creates the content for each task row.
-    public let content: (TaskSnapshot) -> Content
+    /// A closure that receives the current tasks and returns the view content.
+    public let content: ([TaskSnapshot]) -> Content
 
     /// Internal state for the list of tasks.
     @State private var tasks: [TaskSnapshot] = []
 
-    /// Creates a TaskProgressView with the default content layout.
-    ///
-    /// The default layout displays the task name above a progress bar,
-    /// with an optional step name subtitle.
-    ///
-    /// - Parameter executor: The task executor to observe.
-    public init(executor: TaskExecutor) where Content == DefaultRowContent {
-        self.executor = executor
-        self.content = { DefaultRowContent(task: $0) }
-    }
-
-    /// Creates a TaskProgressView with custom content layout.
+    /// Creates a progress view with a custom content closure.
     ///
     /// - Parameters:
     ///   - executor: The task executor to observe.
-    ///   - content: A closure that creates the content for each task row.
-    public init(executor: TaskExecutor, @ViewBuilder content: @escaping (TaskSnapshot) -> Content) {
+    ///   - content: A closure that receives the current tasks and returns the view content.
+    public init(executor: TaskExecutor, @ViewBuilder content: @escaping ([TaskSnapshot]) -> Content) {
         self.executor = executor
         self.content = content
     }
 
     public var body: some View {
-        taskList
+        content(tasks)
             .task {
                 for await graph in executor.progressStream {
                     tasks = graph.tasks
                 }
             }
     }
+}
 
-    /// The task list view.
-    private var taskList: some View {
+// MARK: - Progress Layout
+
+/// A type that defines how to render a collection of tasks.
+///
+/// Layouts receive the task snapshots and an executor reference,
+/// enabling them to render tasks with appropriate actions.
+///
+/// You can create custom layouts by defining a view that takes
+/// tasks and an executor as parameters.
+///
+/// ## Example
+///
+/// ```swift
+/// struct PieChartLayout: View {
+///     let tasks: [TaskSnapshot]
+///     let executor: TaskExecutor
+///
+///     var body: some View {
+///         // Custom rendering
+///     }
+/// }
+///
+/// ProgressContainer(executor: myExecutor) { tasks in
+///     PieChartLayout(tasks: tasks, executor: myExecutor)
+/// }
+/// ```
+///
+/// ## Built-in Layouts
+///
+/// - ``ListLayout`` - A hierarchical tree view of tasks
+public protocol ProgressLayout {
+    // This protocol serves as documentation for custom layout implementations.
+    // Layouts are simply views that accept tasks and an executor parameter.
+}
+
+// MARK: - List Layout
+
+/// A hierarchical tree layout for displaying tasks.
+///
+/// This layout displays tasks with their subtasks in an indented
+/// tree structure, supporting all standard task actions (pause,
+/// resume, cancel, dismiss).
+///
+/// ## Usage
+///
+/// ```swift
+/// ListLayout(tasks: tasks, executor: executor) { task in
+///     DefaultRowContent(task: task)
+/// }
+/// ```
+///
+/// ## Topics
+///
+/// - ``DefaultRowContent`` - The default row content for list items
+public struct ListLayout<RowContent: View>: View {
+    /// The tasks to render.
+    public let tasks: [TaskSnapshot]
+
+    /// The executor for action handlers.
+    public let executor: TaskExecutor
+
+    /// The content closure for rendering individual task rows.
+    public let content: (TaskSnapshot) -> RowContent
+
+    /// Creates a list layout.
+    ///
+    /// - Parameters:
+    ///   - tasks: The tasks to display.
+    ///   - executor: The executor for action handlers.
+    ///   - content: A closure that renders each task row.
+    public init(
+        tasks: [TaskSnapshot],
+        executor: TaskExecutor,
+        @ViewBuilder content: @escaping (TaskSnapshot) -> RowContent
+    ) {
+        self.tasks = tasks
+        self.executor = executor
+        self.content = content
+    }
+
+    public var body: some View {
         ScrollView {
             LazyVStack(alignment: .leading, spacing: 4) {
                 ForEach(tasks) { task in
-                    TaskRowView(
+                    ListTaskRow(
                         task: task,
                         depth: 0,
                         executor: executor,
                         content: content
                     )
                     .id(task.id)
-                    .transition(.asymmetric(
-                        insertion: .opacity.combined(with: .move(edge: .top)),
-                        removal: .opacity
-                    ))
+                    .transition(
+                        .asymmetric(
+                            insertion: .opacity.combined(with: .move(edge: .top)),
+                            removal: .opacity
+                        ))
                 }
             }
             .padding()
@@ -105,13 +163,13 @@ public struct TaskProgressView<Content: View>: View {
     }
 }
 
-// MARK: - Task Row View
+// MARK: - List Task Row
 
 /// A row representing a single task with its subtasks.
 ///
-/// This is a private implementation detail of ``TaskProgressView``.
+/// This is a private implementation detail of ``ListLayout``.
 @MainActor
-private struct TaskRowView<Content: View>: View {
+private struct ListTaskRow<Content: View>: View {
     /// The task snapshot to display.
     public let task: TaskSnapshot
 
@@ -136,21 +194,23 @@ private struct TaskRowView<Content: View>: View {
                 if !task.isFailed && !task.children.isEmpty {
                     VStack(alignment: .leading, spacing: 0) {
                         ForEach(task.children.filter { !$0.isFailed }) { child in
-                            SubtaskRowView(
+                            ListSubtaskRow(
                                 child: child,
                                 depth: depth + 1,
                                 executor: executor,
                                 content: content
                             )
                             .id(child.id)
-                            .transition(.asymmetric(
-                                insertion: .opacity.combined(with: .move(edge: .top)),
-                                removal: .opacity
-                            ))
+                            .transition(
+                                .asymmetric(
+                                    insertion: .opacity.combined(with: .move(edge: .top)),
+                                    removal: .opacity
+                                ))
                         }
                     }
                     .padding(.leading, 16)
-                    .animation(.easeInOut(duration: 0.2), value: task.children.map { $0.progressHash })
+                    .animation(
+                        .easeInOut(duration: 0.2), value: task.children.map { $0.progressHash })
                 }
             }
 
@@ -158,7 +218,7 @@ private struct TaskRowView<Content: View>: View {
 
             // Action buttons gutter (only for top-level tasks, pinned to top)
             if depth == 0 {
-                actionButtons
+                listActionButtons
                     .frame(width: 80, alignment: .trailing)
                     .frame(maxHeight: .infinity, alignment: .top)
                     .padding(.top, 4)
@@ -170,17 +230,21 @@ private struct TaskRowView<Content: View>: View {
 
     /// The action buttons for the task.
     @ViewBuilder
-    private var actionButtons: some View {
+    private var listActionButtons: some View {
         HStack(spacing: 8) {
             // Pause/Resume button
             if task.options.isPausable && task.isRunning {
                 if task.isPaused {
-                    Button { Task { await executor.resume(taskID: task.id) } } label: {
+                    Button {
+                        Task { await executor.resume(taskID: task.id) }
+                    } label: {
                         Image(systemName: "play.circle.fill")
                     }
                     .buttonStyle(.plain)
                 } else {
-                    Button { Task { await executor.pause(taskID: task.id) } } label: {
+                    Button {
+                        Task { await executor.pause(taskID: task.id) }
+                    } label: {
                         Image(systemName: "pause.circle.fill")
                     }
                     .buttonStyle(.plain)
@@ -189,7 +253,9 @@ private struct TaskRowView<Content: View>: View {
 
             // Cancel button
             if task.options.isCancellable && task.isRunning {
-                Button { Task { await executor.cancel(taskID: task.id) } } label: {
+                Button {
+                    Task { await executor.cancel(taskID: task.id) }
+                } label: {
                     Image(systemName: "xmark.circle.fill")
                 }
                 .buttonStyle(.plain)
@@ -197,7 +263,9 @@ private struct TaskRowView<Content: View>: View {
 
             // Dismiss button for failed/cancelled tasks
             if task.isFailed || task.status == .cancelled {
-                Button { Task { await executor.remove(taskID: task.id) } } label: {
+                Button {
+                    Task { await executor.remove(taskID: task.id) }
+                } label: {
                     Image(systemName: "xmark.circle.fill")
                 }
                 .buttonStyle(.plain)
@@ -206,13 +274,13 @@ private struct TaskRowView<Content: View>: View {
     }
 }
 
-// MARK: - Subtask Row View
+// MARK: - List Subtask Row
 
 /// A row representing a subtask.
 ///
-/// This is a private implementation detail of ``TaskProgressView``.
+/// This is a private implementation detail of ``ListLayout``.
 @MainActor
-private struct SubtaskRowView<Content: View>: View {
+private struct ListSubtaskRow<Content: View>: View {
     /// The subtask snapshot to display.
     public let child: TaskSnapshot
 
@@ -236,21 +304,23 @@ private struct SubtaskRowView<Content: View>: View {
                 if !child.isFailed && !child.children.isEmpty {
                     VStack(alignment: .leading, spacing: 0) {
                         ForEach(child.children.filter { !$0.isFailed }) { grandchild in
-                            SubtaskRowView(
+                            ListSubtaskRow(
                                 child: grandchild,
                                 depth: depth + 1,
                                 executor: executor,
                                 content: content
                             )
                             .id(grandchild.id)
-                            .transition(.asymmetric(
-                                insertion: .opacity.combined(with: .move(edge: .top)),
-                                removal: .opacity
-                            ))
+                            .transition(
+                                .asymmetric(
+                                    insertion: .opacity.combined(with: .move(edge: .top)),
+                                    removal: .opacity
+                                ))
                         }
                     }
                     .padding(.leading, 8)
-                    .animation(.easeInOut(duration: 0.2), value: child.children.map { $0.progressHash })
+                    .animation(
+                        .easeInOut(duration: 0.2), value: child.children.map { $0.progressHash })
                 }
             }
         }
@@ -299,96 +369,75 @@ public struct DefaultRowContent: View {
                     .foregroundStyle(.red)
                     .padding(.top, 4)
             } else {
-                ProgressBarView(progress: progressValue)
+                ProgressBar(progress)
             }
         }
     }
 
     /// The progress value to display.
-    private var progressValue: Double? {
+    private var progress: Float? {
         // Show actual progress if paused
         if task.isPaused {
-            return task.progress.map(Double.init)
-        }
+            task.progress
 
-        switch task.status {
-        case .running: return task.progress.map(Double.init)
-        case .completed: return 1.0
-        case .failed: return task.progress.map(Double.init) ?? 1.0
-        case .cancelled: return task.progress.map(Double.init) ?? 0
-        case .pending: return nil
+        } else {
+            switch task.status {
+            case .pending:      nil
+
+            case .running:      task.progress
+
+            case .failed:       task.progress ?? 1.0
+            case .cancelled:    task.progress ?? 0
+
+            case .completed:    1.0
+            }
         }
     }
 }
 
-// MARK: - Alternative Row Layouts
+// MARK: - Task Progress View (Convenience Typealias)
 
-extension TaskProgressView where Content == AnyView {
-    /// Creates a TaskProgressView with progress bar above the task name.
+/// A hierarchical tree view for displaying all tasks in an executor.
+///
+/// This is a convenience typealias that creates a ``ProgressContainer`` with
+/// a ``ListLayout`` and ``DefaultRowContent``.
+///
+/// ```swift
+/// TaskProgressView(executor: myExecutor)
+/// ```
+///
+/// For custom layouts, use ``ProgressContainer`` directly:
+///
+/// ```swift
+/// ProgressContainer(executor: myExecutor) { tasks in
+///     MyCustomLayout(tasks: tasks, executor: myExecutor)
+/// }
+/// ```
+public typealias TaskProgressView = ProgressContainer<ListLayout<DefaultRowContent>>
+
+extension ProgressContainer where Content == ListLayout<DefaultRowContent> {
+    /// Creates a TaskProgressView with the default list layout.
     ///
     /// - Parameter executor: The task executor to observe.
-    /// - Returns: A new TaskProgressView instance.
-    public static func progressAbove(executor: TaskExecutor) -> TaskProgressView<AnyView> {
-        TaskProgressView(executor: executor) { task in
-            AnyView(VStack(alignment: .leading, spacing: 4) {
-                ProgressBarView(progress: progress(for: task))
-                HStack {
-                    Text(task.name)
-                    if let step = task.stepName {
-                        Text("— \(step)")
-                    }
-                }
-                .font(.caption)
-                .foregroundStyle(.secondary)
-            })
-        }
-    }
-
-    /// Creates a compact TaskProgressView with inline layout.
-    ///
-    /// The task name and progress bar are displayed on the same line.
-    ///
-    /// - Parameter executor: The task executor to observe.
-    /// - Returns: A new TaskProgressView instance.
-    public static func compact(executor: TaskExecutor) -> TaskProgressView<AnyView> {
-        TaskProgressView(executor: executor) { task in
-            AnyView(HStack {
-                Text(task.name)
-                Spacer()
-                ProgressBarView(progress: progress(for: task))
-                    .frame(width: 100)
-                if let step = task.stepName {
-                    Text(step)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-            })
-        }
-    }
-
-    /// Calculates the progress value for display.
-    private static func progress(for task: TaskSnapshot) -> Double? {
-        // Show actual progress if paused
-        if task.isPaused {
-            return task.progress.map(Double.init)
-        }
-
-        switch task.status {
-        case .running: return task.progress.map(Double.init)
-        case .completed: return 1.0
-        case .failed: return task.progress.map(Double.init) ?? 1.0
-        case .cancelled: return task.progress.map(Double.init) ?? 0
-        case .pending: return nil
+    public init(executor: TaskExecutor) {
+        self.executor = executor
+        self.content = { tasks in
+            ListLayout(tasks: tasks, executor: executor) { task in
+                DefaultRowContent(task: task)
+            }
         }
     }
 }
+
+// MARK: - Previews
 
 #Preview("Live Preview") {
     LiveTaskPreview()
 }
 
 @MainActor
-final class LiveTaskPreviewModel: ObservableObject {
+@Observable
+final class LiveTaskPreviewModel {
     let executor = TaskExecutor()
 
     func startTask() {
@@ -402,7 +451,7 @@ final class LiveTaskPreviewModel: ObservableObject {
 
                 try await context.push("Downloading files") { subContext in
                     try await subContext.report(.named("Downloading files..."))
-                    for i in 1...5 {
+                    for i in 1 ... 5 {
                         try await Task.sleep(for: .milliseconds(200))
                         try await subContext.report(.progress(Float(i) / 5.0))
                     }
@@ -412,10 +461,10 @@ final class LiveTaskPreviewModel: ObservableObject {
 
                 try await context.push("Parsing records") { parseContext in
                     try await parseContext.report(.named("Parsing records..."))
-                    for batch in 1...3 {
+                    for batch in 1 ... 3 {
                         try await parseContext.push("Batch \(batch)/3") { batchContext in
                             try await batchContext.report(.named("Batch \(batch)/3"))
-                            for i in 1...4 {
+                            for i in 1 ... 4 {
                                 try await Task.sleep(for: .milliseconds(150))
                                 try await batchContext.report(.progress(Float(i) / 4.0))
                             }
@@ -427,7 +476,7 @@ final class LiveTaskPreviewModel: ObservableObject {
 
                 try await context.push("Exporting") { exportContext in
                     try await exportContext.report(.named("Exporting..."))
-                    for i in 1...10 {
+                    for i in 1 ... 10 {
                         try await Task.sleep(for: .milliseconds(100))
                         try await exportContext.report(.progress(Float(i) / 10.0))
                     }
@@ -448,7 +497,7 @@ final class LiveTaskPreviewModel: ObservableObject {
 }
 
 struct LiveTaskPreview: View {
-    @StateObject private var model = LiveTaskPreviewModel()
+    @State private var model = LiveTaskPreviewModel()
 
     var body: some View {
         VStack(spacing: 0) {
@@ -478,7 +527,11 @@ struct LiveTaskPreview: View {
 
             Divider()
 
-            TaskProgressView(executor: model.executor)
+            ProgressContainer(executor: model.executor) { tasks in
+                ListLayout(tasks: tasks, executor: model.executor) { task in
+                    DefaultRowContent(task: task)
+                }
+            }
         }
     }
 }

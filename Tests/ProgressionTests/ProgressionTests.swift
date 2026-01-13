@@ -1,3 +1,11 @@
+//
+//  ProgressionTests.swift
+//  Progression
+//
+//  Created by Mark Onyschuk on 1/13/26.
+//  Copyright © 2026 by Dimension North Inc, All Rights Reserved.
+//
+
 import XCTest
 @testable import Progression
 

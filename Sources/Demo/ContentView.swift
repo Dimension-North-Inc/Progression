@@ -1,3 +1,11 @@
+//
+//  ContentView.swift
+//  Progression
+//
+//  Created by Mark Onyschuk on 1/13/26.
+//  Copyright © 2026 by Dimension North Inc, All Rights Reserved.
+//
+
 import SwiftUI
 import Progression
 import ProgressionUI
@@ -14,7 +22,7 @@ struct DemoApp: App {
 }
 
 struct ContentView: View {
-    @StateObject private var model = DemoViewModel()
+    @State private var model = DemoViewModel()
 
     var body: some View {
         VStack(spacing: 0) {
@@ -54,9 +62,10 @@ struct ContentView: View {
 }
 
 @MainActor
-final class DemoViewModel: ObservableObject {
+@Observable
+final class DemoViewModel {
     let executor = TaskExecutor()
-    @Published var isRunning = false
+    var isRunning = false
 
     func startTask() {
         guard !isRunning else { return }
@@ -158,7 +167,11 @@ final class DemoViewModel: ObservableObject {
                 try await context.push("Failing Step") { stepContext in
                     try await stepContext.report(.named("About to fail..."))
                     try await Task.sleep(for: .milliseconds(200))
-                    throw NSError(domain: "DemoError", code: 42, userInfo: [NSLocalizedDescriptionKey: "Something went wrong in the failing step"])
+                    throw NSError(
+                        domain: "DemoError",
+                        code: 42,
+                        userInfo: [NSLocalizedDescriptionKey: "Something went wrong in the failing step"]
+                    )
                 }
             }
         }

@@ -1,6 +1,14 @@
+//
+//  ProgressBar.swift
+//  Progression
+//
+//  Created by Mark Onyschuk on 1/13/26.
+//  Copyright © 2026 by Dimension North Inc, All Rights Reserved.
+//
+
 import SwiftUI
 
-/// A progress bar view for displaying task completion.
+/// A progress bar for displaying task completion.
 ///
 /// This view wraps SwiftUI's native `ProgressView` with a consistent
 /// linear style and support for both determinate and indeterminate modes.
@@ -9,16 +17,16 @@ import SwiftUI
 ///
 /// ```swift
 /// // Determinate progress
-/// ProgressBarView(progress: 0.5)
+/// ProgressBar(0.5)
 ///
 /// // Indeterminate (animated)
-/// ProgressBarView(progress: nil)
+/// ProgressBar(nil)
 /// ```
 ///
 /// ## See Also
 ///
 /// - ``TaskProgressView``
-public struct ProgressBarView: View {
+public struct ProgressBar: View {
     /// The progress value, from 0.0 to 1.0, or nil for indeterminate.
     public let progress: Double?
 
@@ -26,8 +34,8 @@ public struct ProgressBarView: View {
     ///
     /// - Parameter progress: A value between 0.0 and 1.0 for determinate progress,
     ///   or `nil` for an indeterminate (animated) progress bar.
-    public init(progress: Double?) {
-        self.progress = progress
+    public init(_ progress: Float?) {
+        self.progress = progress.map(Double.init)
     }
 
     public var body: some View {
@@ -45,11 +53,11 @@ public struct ProgressBarView: View {
 
 #Preview {
     VStack {
-        ForEach([0.0, 0.25, 0.5, 0.75, 1.0], id: \.self) { progress in
-            ProgressBarView(progress: progress)
+        ForEach([0.0, 0.25, 0.5, 0.75, 1.0] as [Double], id: \.self) { progress in
+            ProgressBar(Float(progress))
         }
 
-        ProgressBarView(progress: nil)  // Indeterminate
+        ProgressBar(nil) // Indeterminate
     }
     .frame(maxWidth: 200)
     .padding()
