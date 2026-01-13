@@ -38,7 +38,8 @@ final class ProgressionTests: XCTestCase {
     func testTaskNodeCreation() {
         let node = TaskNode(name: "Test Task")
         XCTAssertEqual(node.name, "Test Task")
-        XCTAssertEqual(node.progress, 0.0)
+        XCTAssertNil(node.progress) // Indeterminate until explicitly set
+        XCTAssertTrue(node.isIndeterminate)
         XCTAssertEqual(statusToString(node.status), "pending")
         XCTAssertFalse(node.hasChildren)
     }
@@ -257,6 +258,7 @@ final class ProgressionTests: XCTestCase {
 
     func testRemoveCompletedTasks() async throws {
         let executor = TaskExecutor()
+        executor.completedTaskVisibilityDuration = 0.0 // Remove immediately
 
         // Add a task that completes
         await executor.addTask(
@@ -267,7 +269,7 @@ final class ProgressionTests: XCTestCase {
         }
 
         // Wait for completion
-        try await Task.sleep(for: .milliseconds(100))
+        try await Task.sleep(for: .milliseconds(50))
 
         // Add another task
         await executor.addTask(
@@ -551,12 +553,9 @@ final class ProgressionTests: XCTestCase {
         ) { context in
             try await context.report(.named("Starting"))
 
-            do {
-                try await context.push("Child Task") { _ in
-                    throw TestError(message: "Child failed")
-                }
-            } catch {
-                // Error should propagate, parent will be marked as failed
+            // Let the error propagate - do NOT catch it
+            try await context.push("Child Task") { _ in
+                throw TestError(message: "Child failed")
             }
         }
 
@@ -570,7 +569,7 @@ final class ProgressionTests: XCTestCase {
         if case .failed(let error) = tasks.first?.status {
             XCTAssertEqual(String(describing: error), "Child failed")
         } else {
-            XCTFail("Parent should be failed")
+            XCTFail("Parent should be failed, but was \(String(describing: tasks.first?.status))")
         }
     }
 
