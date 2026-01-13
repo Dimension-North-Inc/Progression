@@ -1,0 +1,12 @@
+{
+  "": {
+    "swift-dependencies": "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/ProgressionPackageTests.build/master.swiftdeps"
+  },
+  "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/ProgressionPackageTests.derived/runner.swift": {
+    "dependencies": "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/ProgressionPackageTests.build/runner.d",
+    "object": "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/ProgressionPackageTests.build/runner.swift.o",
+    "swiftmodule": "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/ProgressionPackageTests.build/runner~partial.swiftmodule",
+    "swift-dependencies": "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/ProgressionPackageTests.build/runner.swiftdeps",
+    "diagnostics": "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/ProgressionPackageTests.build/runner.dia"
+  }
+}

@@ -1,0 +1,1225 @@
+{
+  "builtTestProducts" : [
+    {
+      "binaryPath" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/ProgressionPackageTests.xctest/Contents/MacOS/ProgressionPackageTests",
+      "packagePath" : "/Users/mark/Unix/minimax/Progression",
+      "productName" : "ProgressionPackageTests"
+    }
+  ],
+  "copyCommands" : {
+
+  },
+  "explicitTargetDependencyImportCheckingMode" : {
+    "none" : {
+
+    }
+  },
+  "generatedSourceTargetSet" : [
+
+  ],
+  "pluginDescriptions" : [
+
+  ],
+  "swiftCommands" : {
+    "C.Demo-arm64-apple-macosx26.0-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Demo.build/sources",
+      "importPath" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/Sources/Demo/ContentView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Modules/Progression.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Modules/ProgressionUI.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Demo.build/sources"
+        }
+      ],
+      "isLibrary" : false,
+      "moduleName" : "Demo",
+      "moduleOutputPath" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Modules/Demo.swiftmodule",
+      "objects" : [
+        "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Demo.build/ContentView.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx15.0",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-j10",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-Xfrontend",
+        "-entry-point-function-name",
+        "-Xfrontend",
+        "Demo_main",
+        "-parse-as-library",
+        "-swift-version",
+        "6",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "progression"
+      ],
+      "outputFileMapPath" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Demo.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Demo.build/ContentView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Modules/Demo.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/mark/Unix/minimax/Progression/Sources/Demo/ContentView.swift"
+      ],
+      "tempsPath" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Demo.build",
+      "wholeModuleOptimization" : false
+    },
+    "C.Progression-arm64-apple-macosx26.0-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/sources",
+      "importPath" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/Sources/Progression/Progress.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/Sources/Progression/Progression.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/Sources/Progression/ProgressionError.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/Sources/Progression/TaskContext.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/Sources/Progression/TaskExecutor.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/Sources/Progression/TaskNode.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/Sources/Progression/TaskOptions.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "Progression",
+      "moduleOutputPath" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Modules/Progression.swiftmodule",
+      "objects" : [
+        "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/Progress.swift.o",
+        "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/Progression.swift.o",
+        "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/ProgressionError.swift.o",
+        "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/TaskContext.swift.o",
+        "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/TaskExecutor.swift.o",
+        "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/TaskNode.swift.o",
+        "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/TaskOptions.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx15.0",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-j10",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-emit-objc-header",
+        "-emit-objc-header-path",
+        "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/include/Progression-Swift.h",
+        "-swift-version",
+        "6",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "progression"
+      ],
+      "outputFileMapPath" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/Progress.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/Progression.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/ProgressionError.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/TaskContext.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/TaskExecutor.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/TaskNode.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/TaskOptions.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Modules/Progression.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/mark/Unix/minimax/Progression/Sources/Progression/Progress.swift",
+        "/Users/mark/Unix/minimax/Progression/Sources/Progression/Progression.swift",
+        "/Users/mark/Unix/minimax/Progression/Sources/Progression/ProgressionError.swift",
+        "/Users/mark/Unix/minimax/Progression/Sources/Progression/TaskContext.swift",
+        "/Users/mark/Unix/minimax/Progression/Sources/Progression/TaskExecutor.swift",
+        "/Users/mark/Unix/minimax/Progression/Sources/Progression/TaskNode.swift",
+        "/Users/mark/Unix/minimax/Progression/Sources/Progression/TaskOptions.swift"
+      ],
+      "tempsPath" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build",
+      "wholeModuleOptimization" : false
+    },
+    "C.ProgressionPackageTests-arm64-apple-macosx26.0-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/ProgressionPackageTests.build/sources",
+      "importPath" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/ProgressionPackageTests.derived/runner.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Modules/ProgressionTests.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/ProgressionPackageTests.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "ProgressionPackageTests",
+      "moduleOutputPath" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Modules/ProgressionPackageTests.swiftmodule",
+      "objects" : [
+        "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/ProgressionPackageTests.build/runner.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx15.0",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-Xfrontend",
+        "-enable-cross-import-overlays",
+        "-j10",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-emit-objc-header",
+        "-emit-objc-header-path",
+        "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/ProgressionPackageTests.build/include/ProgressionPackageTests-Swift.h",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "progression"
+      ],
+      "outputFileMapPath" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/ProgressionPackageTests.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/ProgressionPackageTests.build/runner.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Modules/ProgressionPackageTests.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/ProgressionPackageTests.derived/runner.swift"
+      ],
+      "tempsPath" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/ProgressionPackageTests.build",
+      "wholeModuleOptimization" : false
+    },
+    "C.ProgressionTests-arm64-apple-macosx26.0-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/ProgressionTests.build/sources",
+      "importPath" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/Tests/ProgressionTests/ProgressionTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Modules/Progression.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/ProgressionTests.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "ProgressionTests",
+      "moduleOutputPath" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Modules/ProgressionTests.swiftmodule",
+      "objects" : [
+        "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/ProgressionTests.build/ProgressionTests.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx15.0",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-Xfrontend",
+        "-enable-cross-import-overlays",
+        "-j10",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-swift-version",
+        "6",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "progression"
+      ],
+      "outputFileMapPath" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/ProgressionTests.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/ProgressionTests.build/ProgressionTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Modules/ProgressionTests.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/mark/Unix/minimax/Progression/Tests/ProgressionTests/ProgressionTests.swift"
+      ],
+      "tempsPath" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/ProgressionTests.build",
+      "wholeModuleOptimization" : false
+    },
+    "C.ProgressionUI-arm64-apple-macosx26.0-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/ProgressionUI.build/sources",
+      "importPath" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/Sources/ProgressionUI/ProgressBarView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/Sources/ProgressionUI/ProgressionUI.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/Sources/ProgressionUI/TaskProgressView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Modules/Progression.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/ProgressionUI.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "ProgressionUI",
+      "moduleOutputPath" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Modules/ProgressionUI.swiftmodule",
+      "objects" : [
+        "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/ProgressionUI.build/ProgressBarView.swift.o",
+        "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/ProgressionUI.build/ProgressionUI.swift.o",
+        "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/ProgressionUI.build/TaskProgressView.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx15.0",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-j10",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-emit-objc-header",
+        "-emit-objc-header-path",
+        "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/ProgressionUI.build/include/ProgressionUI-Swift.h",
+        "-swift-version",
+        "6",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "progression"
+      ],
+      "outputFileMapPath" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/ProgressionUI.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/ProgressionUI.build/ProgressBarView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/ProgressionUI.build/ProgressionUI.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/ProgressionUI.build/TaskProgressView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Modules/ProgressionUI.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/mark/Unix/minimax/Progression/Sources/ProgressionUI/ProgressBarView.swift",
+        "/Users/mark/Unix/minimax/Progression/Sources/ProgressionUI/ProgressionUI.swift",
+        "/Users/mark/Unix/minimax/Progression/Sources/ProgressionUI/TaskProgressView.swift"
+      ],
+      "tempsPath" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/ProgressionUI.build",
+      "wholeModuleOptimization" : false
+    }
+  },
+  "swiftFrontendCommands" : {
+
+  },
+  "swiftTargetScanArgs" : {
+    "Demo" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "Demo",
+      "-package-name",
+      "progression",
+      "-c",
+      "/Users/mark/Unix/minimax/Progression/Sources/Demo/ContentView.swift",
+      "-I",
+      "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx15.0",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-j10",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-Xfrontend",
+      "-entry-point-function-name",
+      "-Xfrontend",
+      "Demo_main",
+      "-parse-as-library",
+      "-swift-version",
+      "6",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "progression",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ],
+    "Progression" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "Progression",
+      "-package-name",
+      "progression",
+      "-c",
+      "/Users/mark/Unix/minimax/Progression/Sources/Progression/Progress.swift",
+      "/Users/mark/Unix/minimax/Progression/Sources/Progression/Progression.swift",
+      "/Users/mark/Unix/minimax/Progression/Sources/Progression/ProgressionError.swift",
+      "/Users/mark/Unix/minimax/Progression/Sources/Progression/TaskContext.swift",
+      "/Users/mark/Unix/minimax/Progression/Sources/Progression/TaskExecutor.swift",
+      "/Users/mark/Unix/minimax/Progression/Sources/Progression/TaskNode.swift",
+      "/Users/mark/Unix/minimax/Progression/Sources/Progression/TaskOptions.swift",
+      "-I",
+      "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx15.0",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-j10",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-emit-objc-header",
+      "-emit-objc-header-path",
+      "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/include/Progression-Swift.h",
+      "-swift-version",
+      "6",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "progression",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ],
+    "ProgressionPackageTests" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "ProgressionPackageTests",
+      "-package-name",
+      "progression",
+      "-c",
+      "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/ProgressionPackageTests.derived/runner.swift",
+      "-I",
+      "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx15.0",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-Xfrontend",
+      "-enable-cross-import-overlays",
+      "-j10",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-emit-objc-header",
+      "-emit-objc-header-path",
+      "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/ProgressionPackageTests.build/include/ProgressionPackageTests-Swift.h",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "progression",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ],
+    "ProgressionTests" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "ProgressionTests",
+      "-package-name",
+      "progression",
+      "-c",
+      "/Users/mark/Unix/minimax/Progression/Tests/ProgressionTests/ProgressionTests.swift",
+      "-I",
+      "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx15.0",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-Xfrontend",
+      "-enable-cross-import-overlays",
+      "-j10",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-swift-version",
+      "6",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "progression",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ],
+    "ProgressionUI" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "ProgressionUI",
+      "-package-name",
+      "progression",
+      "-c",
+      "/Users/mark/Unix/minimax/Progression/Sources/ProgressionUI/ProgressBarView.swift",
+      "/Users/mark/Unix/minimax/Progression/Sources/ProgressionUI/ProgressionUI.swift",
+      "/Users/mark/Unix/minimax/Progression/Sources/ProgressionUI/TaskProgressView.swift",
+      "-I",
+      "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx15.0",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-j10",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-emit-objc-header",
+      "-emit-objc-header-path",
+      "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/ProgressionUI.build/include/ProgressionUI-Swift.h",
+      "-swift-version",
+      "6",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "progression",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ]
+  },
+  "targetDependencyMap" : {
+    "Demo" : [
+      "ProgressionUI",
+      "Progression"
+    ],
+    "Progression" : [
+
+    ],
+    "ProgressionPackageTests" : [
+      "ProgressionTests",
+      "Progression"
+    ],
+    "ProgressionTests" : [
+      "Progression"
+    ],
+    "ProgressionUI" : [
+      "Progression"
+    ]
+  },
+  "testDiscoveryCommands" : {
+
+  },
+  "testEntryPointCommands" : {
+    "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/ProgressionPackageTests.derived/runner.swift" : {
+      "inputs" : [
+
+      ],
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/ProgressionPackageTests.derived/runner.swift"
+        }
+      ]
+    }
+  },
+  "traitConfiguration" : {
+    "default" : {
+
+    }
+  },
+  "writeCommands" : {
+    "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Demo-entitlement.plist" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<entitlement-plist>"
+        },
+        {
+          "kind" : "virtual",
+          "name" : "<com.apple.security.get-task-allow>"
+        }
+      ],
+      "outputFilePath" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Demo-entitlement.plist"
+    },
+    "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Demo.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/Sources/Demo/ContentView.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Demo.build/sources"
+    },
+    "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Demo.product/Objects.LinkFileList" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<link-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Demo.build/ContentView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/Progress.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/Progression.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/ProgressionError.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/TaskContext.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/TaskExecutor.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/TaskNode.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/TaskOptions.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/ProgressionUI.build/ProgressBarView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/ProgressionUI.build/ProgressionUI.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/ProgressionUI.build/TaskProgressView.swift.o"
+        }
+      ],
+      "outputFilePath" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Demo.product/Objects.LinkFileList"
+    },
+    "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/Sources/Progression/Progress.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/Sources/Progression/Progression.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/Sources/Progression/ProgressionError.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/Sources/Progression/TaskContext.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/Sources/Progression/TaskExecutor.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/Sources/Progression/TaskNode.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/Sources/Progression/TaskOptions.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/sources"
+    },
+    "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/ProgressionPackageTests.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/ProgressionPackageTests.derived/runner.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/ProgressionPackageTests.build/sources"
+    },
+    "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/ProgressionPackageTests.product/Objects.LinkFileList" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<link-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/Progress.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/Progression.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/ProgressionError.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/TaskContext.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/TaskExecutor.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/TaskNode.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/TaskOptions.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/ProgressionPackageTests.build/runner.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/ProgressionTests.build/ProgressionTests.swift.o"
+        }
+      ],
+      "outputFilePath" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/ProgressionPackageTests.product/Objects.LinkFileList"
+    },
+    "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/ProgressionTests.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/Tests/ProgressionTests/ProgressionTests.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/ProgressionTests.build/sources"
+    },
+    "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/ProgressionUI.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/Sources/ProgressionUI/ProgressBarView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/Sources/ProgressionUI/ProgressionUI.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/mark/Unix/minimax/Progression/Sources/ProgressionUI/TaskProgressView.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/ProgressionUI.build/sources"
+    },
+    "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt" : {
+      "alwaysOutOfDate" : true,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<swift-get-version>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+        }
+      ],
+      "outputFilePath" : "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+    }
+  }
+}

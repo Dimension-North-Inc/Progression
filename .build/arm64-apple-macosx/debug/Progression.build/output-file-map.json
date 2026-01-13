@@ -1,0 +1,54 @@
+{
+  "": {
+    "swift-dependencies": "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/master.swiftdeps"
+  },
+  "/Users/mark/Unix/minimax/Progression/Sources/Progression/Progress.swift": {
+    "dependencies": "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/Progress.d",
+    "object": "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/Progress.swift.o",
+    "swiftmodule": "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/Progress~partial.swiftmodule",
+    "swift-dependencies": "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/Progress.swiftdeps",
+    "diagnostics": "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/Progress.dia"
+  },
+  "/Users/mark/Unix/minimax/Progression/Sources/Progression/Progression.swift": {
+    "dependencies": "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/Progression.d",
+    "object": "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/Progression.swift.o",
+    "swiftmodule": "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/Progression~partial.swiftmodule",
+    "swift-dependencies": "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/Progression.swiftdeps",
+    "diagnostics": "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/Progression.dia"
+  },
+  "/Users/mark/Unix/minimax/Progression/Sources/Progression/ProgressionError.swift": {
+    "dependencies": "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/ProgressionError.d",
+    "object": "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/ProgressionError.swift.o",
+    "swiftmodule": "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/ProgressionError~partial.swiftmodule",
+    "swift-dependencies": "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/ProgressionError.swiftdeps",
+    "diagnostics": "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/ProgressionError.dia"
+  },
+  "/Users/mark/Unix/minimax/Progression/Sources/Progression/TaskContext.swift": {
+    "dependencies": "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/TaskContext.d",
+    "object": "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/TaskContext.swift.o",
+    "swiftmodule": "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/TaskContext~partial.swiftmodule",
+    "swift-dependencies": "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/TaskContext.swiftdeps",
+    "diagnostics": "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/TaskContext.dia"
+  },
+  "/Users/mark/Unix/minimax/Progression/Sources/Progression/TaskExecutor.swift": {
+    "dependencies": "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/TaskExecutor.d",
+    "object": "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/TaskExecutor.swift.o",
+    "swiftmodule": "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/TaskExecutor~partial.swiftmodule",
+    "swift-dependencies": "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/TaskExecutor.swiftdeps",
+    "diagnostics": "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/TaskExecutor.dia"
+  },
+  "/Users/mark/Unix/minimax/Progression/Sources/Progression/TaskNode.swift": {
+    "dependencies": "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/TaskNode.d",
+    "object": "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/TaskNode.swift.o",
+    "swiftmodule": "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/TaskNode~partial.swiftmodule",
+    "swift-dependencies": "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/TaskNode.swiftdeps",
+    "diagnostics": "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/TaskNode.dia"
+  },
+  "/Users/mark/Unix/minimax/Progression/Sources/Progression/TaskOptions.swift": {
+    "dependencies": "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/TaskOptions.d",
+    "object": "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/TaskOptions.swift.o",
+    "swiftmodule": "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/TaskOptions~partial.swiftmodule",
+    "swift-dependencies": "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/TaskOptions.swiftdeps",
+    "diagnostics": "/Users/mark/Unix/minimax/Progression/.build/arm64-apple-macosx/debug/Progression.build/TaskOptions.dia"
+  }
+}
