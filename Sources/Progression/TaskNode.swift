@@ -371,6 +371,11 @@ public final class TaskNode: @unchecked Sendable, Identifiable {
         if case .running = _status { return true }
         return false
     }
+
+    /// A Boolean value that indicates whether progress is indeterminate.
+    public var isIndeterminate: Bool {
+        _progress == nil
+    }
 }
 
 /// Possible states for a task node.

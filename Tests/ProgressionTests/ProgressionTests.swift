@@ -258,7 +258,7 @@ final class ProgressionTests: XCTestCase {
 
     func testRemoveCompletedTasks() async throws {
         let executor = TaskExecutor()
-        executor.completedTaskVisibilityDuration = 0.0 // Remove immediately
+        await executor.setVisibilityDuration(0.0) // Remove immediately
 
         // Add a task that completes
         await executor.addTask(

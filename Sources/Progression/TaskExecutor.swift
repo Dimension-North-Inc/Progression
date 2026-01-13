@@ -44,6 +44,11 @@ public actor TaskExecutor {
     /// Time in seconds to keep completed tasks before automatic cleanup.
     public var completedTaskVisibilityDuration: TimeInterval = 1.0
 
+    /// Sets the visibility duration for completed tasks.
+    public func setVisibilityDuration(_ duration: TimeInterval) {
+        completedTaskVisibilityDuration = duration
+    }
+
     /// Creates a new task executor.
     public init() {}
 
