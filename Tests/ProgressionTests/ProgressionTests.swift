@@ -95,7 +95,7 @@ final class ProgressionTests: XCTestCase {
         parent.addChild(child2)
         parent.recalculateProgress()
 
-        XCTAssertEqual(parent.progress, 0.75, accuracy: 0.01)
+        XCTAssertEqual(parent.progress ?? 0.0, 0.75 as Float)
     }
 
     // MARK: - TaskProgress Tests
@@ -189,7 +189,7 @@ final class ProgressionTests: XCTestCase {
         ) { context in
             try await context.report(.named("Starting"))
 
-            try await context.push { subContext in
+            try await context.push("Subtask") { subContext in
                 try await subContext.report(.progress(0.5))
             }
 
@@ -215,10 +215,10 @@ final class ProgressionTests: XCTestCase {
         ) { context in
             try await context.report(.progress(0.5))
 
-            try await context.push { nestedContext in
+            try await context.push("Nested") { nestedContext in
                 try await nestedContext.report(.progress(0.25))
 
-                try await nestedContext.push { deepContext in
+                try await nestedContext.push("Deep") { deepContext in
                     try await deepContext.report(.progress(0.1))
                 }
             }
@@ -336,7 +336,7 @@ final class ProgressionTests: XCTestCase {
             try await Task.sleep(nanoseconds: 10_000_000)
             try await context.report(.progress(0.5))
 
-            try await context.push { parseContext in
+            try await context.push("Parse") { parseContext in
                 try await parseContext.report(.named("Parsing records..."))
                 try await Task.sleep(nanoseconds: 5_000_000)
                 try await parseContext.report(.progress(0.3))
@@ -414,6 +414,164 @@ final class ProgressionTests: XCTestCase {
         // Resume again
         node.resume()
         XCTAssertFalse(node.isPaused)
+    }
+
+    // MARK: - Async Pause/Resume Tests
+
+    func testPauseResumeDuringTask() async throws {
+        let executor = TaskExecutor()
+
+        let _ = Locked(false) // isPaused tracking
+        let hasResumed = Locked(false)
+
+        await executor.addTask(
+            name: "Paused Task",
+            options: .interactive
+        ) { context in
+            try await context.report(.named("Starting"))
+
+            // Report that will block if paused
+            try await context.report(.progress(0.0))
+
+            // Mark that we got past the pause
+            hasResumed.withValue { $0 = true }
+        }
+
+        // Get the task ID
+        let tasks = await executor.allTasks
+        guard let taskID = tasks.first?.id else {
+            XCTFail("Task should exist")
+            return
+        }
+
+        // Pause the task
+        await executor.pause(taskID: taskID)
+
+        // Give it time to process
+        try await Task.sleep(for: .milliseconds(50))
+
+        // Resume the task
+        await executor.resume(taskID: taskID)
+
+        // Wait for completion
+        try await Task.sleep(for: .milliseconds(100))
+
+        let completedTasks = await executor.allTasks
+        XCTAssertEqual(completedTasks.first?.status, .completed)
+    }
+
+    func testMultipleConcurrentTasksIsolation() async throws {
+        let executor = TaskExecutor()
+        let task1Progress = Locked(0.0)
+        let task2Progress = Locked(0.0)
+
+        // Add first task
+        await executor.addTask(
+            name: "Task 1",
+            options: .interactive
+        ) { context in
+            try await context.report(.progress(0.0))
+            try await context.report(.progress(0.5))
+            task1Progress.withValue { $0 = 0.5 }
+            try await context.report(.progress(1.0))
+            task1Progress.withValue { $0 = 1.0 }
+        }
+
+        // Add second task immediately after
+        await executor.addTask(
+            name: "Task 2",
+            options: .interactive
+        ) { context in
+            try await context.report(.progress(0.0))
+            try await context.report(.progress(1.0))
+            task2Progress.withValue { $0 = 1.0 }
+        }
+
+        // Wait for both to complete
+        try await Task.sleep(for: .milliseconds(200))
+
+        let tasks = await executor.allTasks
+        XCTAssertEqual(tasks.count, 2)
+
+        // Verify both tasks completed independently
+        let task1 = tasks.first { $0.name == "Task 1" }
+        let task2 = tasks.first { $0.name == "Task 2" }
+
+        XCTAssertEqual(task1?.status, .completed)
+        XCTAssertEqual(task2?.status, .completed)
+        XCTAssertEqual(task1Progress.value, 1.0)
+        XCTAssertEqual(task2Progress.value, 1.0)
+    }
+
+    func testCancelSpecificTask() async throws {
+        let executor = TaskExecutor()
+
+        await executor.addTask(
+            name: "Task to Cancel",
+            options: .default
+        ) { _ in
+            try await Task.sleep(for: .seconds(10))
+        }
+
+        await executor.addTask(
+            name: "Task to Keep",
+            options: .default
+        ) { context in
+            try await context.report(.progress(0.5))
+        }
+
+        let tasks = await executor.allTasks
+        let taskToCancelID = tasks.first { $0.name == "Task to Cancel" }?.id
+
+        guard let id = taskToCancelID else {
+            XCTFail("Task should exist")
+            return
+        }
+
+        await executor.cancel(taskID: id)
+
+        let updatedTasks = await executor.allTasks
+        let cancelled = updatedTasks.first { $0.name == "Task to Cancel" }
+        let kept = updatedTasks.first { $0.name == "Task to Keep" }
+
+        XCTAssertEqual(cancelled?.status, .cancelled)
+        XCTAssertEqual(kept?.status, .completed)
+    }
+
+    func testErrorPropagation() async throws {
+        let executor = TaskExecutor()
+
+        struct TestError: Error, Equatable {
+            let message: String
+        }
+
+        await executor.addTask(
+            name: "Parent Task",
+            options: .default
+        ) { context in
+            try await context.report(.named("Starting"))
+
+            do {
+                try await context.push("Child Task") { _ in
+                    throw TestError(message: "Child failed")
+                }
+            } catch {
+                // Error should propagate, parent will be marked as failed
+            }
+        }
+
+        // Wait for error to propagate
+        try await Task.sleep(for: .milliseconds(100))
+
+        let tasks = await executor.allTasks
+        XCTAssertEqual(tasks.count, 1)
+
+        // Parent should be marked as failed
+        if case .failed(let error) = tasks.first?.status {
+            XCTAssertEqual(String(describing: error), "Child failed")
+        } else {
+            XCTFail("Parent should be failed")
+        }
     }
 
     // MARK: - Helpers
