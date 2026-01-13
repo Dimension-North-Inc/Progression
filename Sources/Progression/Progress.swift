@@ -32,6 +32,12 @@ public struct TaskProgress: Sendable {
     /// nil indicates an indeterminate (unknown) progress.
     public var completeness: Float?
 
+    /// Creates a new progress with a name and optional completeness.
+    public init(name: String, completeness: Float? = nil) {
+        self.name = name
+        self.completeness = completeness
+    }
+
     // MARK: - Static Factories
 
     /// Creates a named progress update without a numerical value.

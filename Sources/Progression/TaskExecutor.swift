@@ -11,13 +11,15 @@ import Foundation
 /// Internal implementation of TaskContext that delegates to the executor actor.
 final class TaskContextImpl: @unchecked Sendable, TaskContext {
     private weak let executor: TaskExecutor?
+    private let taskID: UUID
 
-    init(executor: TaskExecutor) {
+    init(executor: TaskExecutor, taskID: UUID) {
         self.executor = executor
+        self.taskID = taskID
     }
 
     nonisolated func report(_ progress: TaskProgress) async throws {
-        try await executor?.reportInternal(progress)
+        try await executor?.reportInternal(taskID: taskID, progress)
     }
 
     nonisolated func push(
@@ -25,7 +27,7 @@ final class TaskContextImpl: @unchecked Sendable, TaskContext {
         _ step: @escaping @Sendable (any TaskContext) async throws -> Void
     ) async throws {
         try await Task {
-            try await executor?.pushInternal(name: name, step)
+            try await executor?.pushInternal(taskID: taskID, name: name, step)
         }.value
     }
 }
@@ -71,7 +73,7 @@ public actor TaskExecutor {
 
         // Run the task in background
         Task {
-            let context = TaskContextImpl(executor: self)
+            let context = TaskContextImpl(executor: self, taskID: taskID)
             do {
                 try await task(context)
                 taskNode.status = .completed
@@ -256,16 +258,16 @@ public actor TaskExecutor {
 
     // MARK: - Internal Methods
 
-    fileprivate func reportInternal(_ progress: TaskProgress) async throws {
-        guard let taskID = currentNodeID,
-              let task = findTask(id: taskID) else { return }
+    fileprivate func reportInternal(taskID: UUID, _ progress: TaskProgress) async throws {
+        guard let task = findTask(id: taskID) else { return }
 
         // Check if cancelled
         if task.options.isCancellable, task.status == .cancelled {
             throw CancellationError()
         }
 
-        // Wait if paused - loop to handle race conditions
+        // Wait if paused - loop handles race conditions where isPaused might
+        // still be true after resume due to timing between suspension and state update
         while task.isPaused {
             await withCheckedContinuation { continuation in
                 pauseContinuations[taskID] = continuation
@@ -315,11 +317,11 @@ public actor TaskExecutor {
     }
 
     fileprivate func pushInternal(
+        taskID parentID: UUID,
         name: String,
         _ step: @escaping @Sendable (any TaskContext) async throws -> Void
     ) async throws {
-        guard let parentID = currentNodeID,
-              let parentTask = findTask(id: parentID) else { return }
+        guard let parentTask = findTask(id: parentID) else { return }
 
         let childNode = TaskNode(name: name, parentID: parentTask.id)
         parentTask.addChild(childNode)
@@ -332,7 +334,7 @@ public actor TaskExecutor {
         await broadcastGraph()
 
         do {
-            let nestedContext = TaskContextImpl(executor: self)
+            let nestedContext = TaskContextImpl(executor: self, taskID: childNode.id)
             try await step(nestedContext)
             childNode.status = .completed
             childNode.progress = 1.0
