@@ -329,7 +329,7 @@ public final class TaskNode: @unchecked Sendable, Identifiable {
             if !child.isCompleted { return true }
             // Keep if completed recently
             if let completedAt = child.completedAt {
-                return completedAt.timeIntervalSince1970 >= cutoff
+                return completedAt.timeIntervalSinceReferenceDate >= cutoff
             }
             return true
         }
