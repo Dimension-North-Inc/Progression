@@ -235,35 +235,36 @@ struct ContentView: View {
 
 ### TaskProgressView
 
-A hierarchical tree view for displaying all tasks:
+A hierarchical tree view for displaying all tasks. This is a typealias for ``ProgressContainer`` with a default list layout:
 
 ```swift
 // Default layout (name above progress bar)
 TaskProgressView(executor: myExecutor)
-
-// Custom layout
-TaskProgressView(executor: myExecutor) { task in
-    HStack {
-        Text(task.name)
-        ProgressBarView(progress: Double(task.progress ?? 0))
-    }
-}
-
-// Alternative layouts
-TaskProgressView.progressAbove(executor: myExecutor)
-TaskProgressView.compact(executor: myExecutor)
 ```
 
-### ProgressBarView
+### ProgressContainer
+
+For custom layouts, use ``ProgressContainer`` directly:
+
+```swift
+ProgressContainer(executor: myExecutor) { tasks in
+    // Custom rendering of tasks
+    ForEach(tasks) { task in
+        Text(task.name)
+    }
+}
+```
+
+### ProgressBar
 
 A simple progress bar component:
 
 ```swift
 // Determinate progress
-ProgressBarView(progress: 0.5)
+ProgressBar(0.5)
 
 // Indeterminate (animated)
-ProgressBarView(progress: nil)
+ProgressBar(nil)
 ```
 
 ## Error Handling
