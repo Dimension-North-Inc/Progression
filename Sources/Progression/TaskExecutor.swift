@@ -452,7 +452,11 @@ public actor TaskExecutor {
 
         await broadcastGraph()
 
-        // Schedule cleanup after visibility duration
+        // Clean up completed children immediately
+        // This ensures children are removed even if parent completes before cleanup timer fires
+        parentTask.cleanupCompletedChildren(olderThan: 0)
+
+        // Schedule cleanup for top-level tasks
         scheduleCleanup()
     }
 
