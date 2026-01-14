@@ -39,6 +39,14 @@ public struct TaskOptions: Sendable, Equatable {
     /// When `false`, pause/resume operations will be ignored.
     public var isPausable: Bool
 
+    /// A Boolean value that indicates whether the task can be retried after failure.
+    ///
+    /// When `true`, the task can be restarted by calling ``TaskExecutor/retry(taskID:)``
+    /// after it fails or is cancelled. The task will be re-executed with the same
+    /// options and name.
+    /// When `false`, retry operations will be ignored.
+    public var canRetry: Bool
+
     /// The maximum duration the task is allowed to execute.
     ///
     /// When the task exceeds this duration, it will be cancelled with a
@@ -54,14 +62,17 @@ public struct TaskOptions: Sendable, Equatable {
     /// - Parameters:
     ///   - isCancellable: Whether the task supports cancellation. Default is `true`.
     ///   - isPausable: Whether the task supports pausing and resuming. Default is `false`.
+    ///   - canRetry: Whether the task can be retried after failure. Default is `false`.
     ///   - timeout: Optional maximum execution duration.
     public init(
         isCancellable: Bool = true,
         isPausable: Bool = false,
+        canRetry: Bool = false,
         timeout: Duration? = nil
     ) {
         self.isCancellable = isCancellable
         self.isPausable = isPausable
+        self.canRetry = canRetry
         self.timeout = timeout
     }
 
@@ -76,6 +87,7 @@ public struct TaskOptions: Sendable, Equatable {
         TaskOptions(
             isCancellable: value,
             isPausable: isPausable,
+            canRetry: canRetry,
             timeout: timeout
         )
     }
@@ -89,6 +101,21 @@ public struct TaskOptions: Sendable, Equatable {
         TaskOptions(
             isCancellable: isCancellable,
             isPausable: value,
+            canRetry: canRetry,
+            timeout: timeout
+        )
+    }
+
+    /// Returns a new options configuration with the specified retry setting.
+    ///
+    /// - Parameter value: Whether the task should be retryable. Default is `true`.
+    /// - Returns: A new ``TaskOptions`` with the updated retry setting.
+    @available(macOS 12.0, iOS 15.0, tvOS 15.0, watchOS 8.0, *)
+    public func retryable(_ value: Bool = true) -> Self {
+        TaskOptions(
+            isCancellable: isCancellable,
+            isPausable: isPausable,
+            canRetry: value,
             timeout: timeout
         )
     }
@@ -103,6 +130,7 @@ public struct TaskOptions: Sendable, Equatable {
         TaskOptions(
             isCancellable: isCancellable,
             isPausable: isPausable,
+            canRetry: canRetry,
             timeout: duration
         )
     }
@@ -112,14 +140,14 @@ public struct TaskOptions: Sendable, Equatable {
     /// The task can be cancelled but cannot be paused.
     /// This is appropriate for most background operations.
     public static var `default`: Self {
-        TaskOptions(isCancellable: true, isPausable: false)
+        TaskOptions(isCancellable: true, isPausable: false, canRetry: false)
     }
 
     /// Options for a task that cannot be cancelled or paused.
     ///
     /// Use this for critical operations that must complete.
     public static var immutable: Self {
-        TaskOptions(isCancellable: false, isPausable: false)
+        TaskOptions(isCancellable: false, isPausable: false, canRetry: false)
     }
 
     /// Options for a fully interactive task.
@@ -127,6 +155,6 @@ public struct TaskOptions: Sendable, Equatable {
     /// The task can be both cancelled and paused.
     /// Use this when you want the user to have full control.
     public static var interactive: Self {
-        TaskOptions(isCancellable: true, isPausable: true)
+        TaskOptions(isCancellable: true, isPausable: true, canRetry: false)
     }
 }

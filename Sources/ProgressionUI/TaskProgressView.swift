@@ -239,15 +239,19 @@ private struct ListTaskRow<Content: View>: View {
                         Task { await executor.resume(taskID: task.id) }
                     } label: {
                         Image(systemName: "play.circle.fill")
+                            .font(.title3)
                     }
                     .buttonStyle(.plain)
+                    .foregroundStyle(.secondary)
                 } else {
                     Button {
                         Task { await executor.pause(taskID: task.id) }
                     } label: {
                         Image(systemName: "pause.circle.fill")
+                            .font(.title3)
                     }
                     .buttonStyle(.plain)
+                    .foregroundStyle(.secondary)
                 }
             }
 
@@ -257,18 +261,34 @@ private struct ListTaskRow<Content: View>: View {
                     Task { await executor.cancel(taskID: task.id) }
                 } label: {
                     Image(systemName: "xmark.circle.fill")
+                        .font(.title3)
                 }
                 .buttonStyle(.plain)
+                .foregroundStyle(.secondary)
             }
 
-            // Dismiss button for failed/cancelled tasks
+            // Retry button for retryable failed/cancelled tasks
+            if task.options.canRetry && (task.isFailed || task.status == .cancelled) {
+                Button {
+                    Task { await executor.retry(taskID: task.id) }
+                } label: {
+                    Image(systemName: "arrow.counterclockwise.circle.fill")
+                        .font(.title3)
+                }
+                .buttonStyle(.plain)
+                .foregroundStyle(.secondary)
+            }
+
+            // Dismiss button for failed/cancelled tasks (always last)
             if task.isFailed || task.status == .cancelled {
                 Button {
                     Task { await executor.remove(taskID: task.id) }
                 } label: {
                     Image(systemName: "xmark.circle.fill")
+                        .font(.title3)
                 }
                 .buttonStyle(.plain)
+                .foregroundStyle(.secondary)
             }
         }
     }

@@ -78,6 +78,7 @@ public actor TaskExecutor {
     ) async -> String {
         let taskNode = TaskNode(id: id ?? UUID().uuidString, name: name, options: options)
         taskNode.status = .running
+        taskNode.retryHandler = task
         tasks[taskNode.id] = taskNode
 
         let taskID = taskNode.id
@@ -213,7 +214,50 @@ public actor TaskExecutor {
 
         // Remove immediately
         tasks.removeValue(forKey: taskID)
+        swiftTasks.removeValue(forKey: taskID)
         Task { await broadcastGraph() }
+    }
+
+    /// Retries a failed or cancelled task.
+    ///
+    /// The task must have `canRetry` set to `true` in its options.
+    /// This removes the failed/cancelled task and creates a new task with
+    /// the same name, options, and task body.
+    ///
+    /// - Parameter taskID: The ID of the task to retry.
+    /// - Returns: The ID of the new retried task, or `nil` if the task
+    ///   cannot be retried (either because it doesn't exist or `canRetry` is false).
+    @discardableResult
+    public func retry(taskID: String) async -> String? {
+        guard let task = tasks[taskID] else { return nil }
+        guard task.options.canRetry else { return nil }
+
+        // Check that the task is in a retryable state
+        switch task.status {
+        case .failed, .cancelled:
+            break
+        default:
+            return nil
+        }
+
+        // Capture the retry handler before removing the task
+        guard let retryHandler = task.retryHandler else { return nil }
+
+        // Remove the old task
+        tasks.removeValue(forKey: taskID)
+        swiftTasks.removeValue(forKey: taskID)
+        cleanupContinuations(for: task)
+
+        // Create a new task with the same parameters
+        let newTaskID = await addTask(
+            name: task.name,
+            id: task.id, // Reuse the same ID
+            options: task.options,
+            retryHandler
+        )
+
+        await broadcastGraph()
+        return newTaskID
     }
 
     /// Cancels all tasks.

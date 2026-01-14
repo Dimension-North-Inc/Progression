@@ -56,6 +56,10 @@ public final class TaskNode: @unchecked Sendable, Identifiable {
     /// Completion timestamp.
     private var _completedAt: Date?
 
+    /// Retry handler closure for retryable tasks.
+    /// This stores the original task closure so it can be re-executed on retry.
+    private var _retryHandler: (@Sendable (any TaskContext) async throws -> Void)?
+
     /// The parent node, if any.
     public unowned var parent: TaskNode?
 
@@ -290,6 +294,24 @@ public final class TaskNode: @unchecked Sendable, Identifiable {
             lock.lock()
             defer { lock.unlock() }
             _completedAt = newValue
+        }
+    }
+
+    // MARK: - Retry Handler
+
+    /// The retry handler closure, if set.
+    ///
+    /// This is used internally to re-execute a task on retry.
+    var retryHandler: (@Sendable (any TaskContext) async throws -> Void)? {
+        get {
+            lock.lock()
+            defer { lock.unlock() }
+            return _retryHandler
+        }
+        set {
+            lock.lock()
+            defer { lock.unlock() }
+            _retryHandler = newValue
         }
     }
 

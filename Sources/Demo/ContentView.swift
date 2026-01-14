@@ -42,6 +42,13 @@ struct ContentView: View {
                 }
                 .buttonStyle(.bordered)
 
+                Button {
+                    model.startRetryableFailingTask()
+                } label: {
+                    Label("Start Retryable Task", systemImage: "arrow.counterclockwise")
+                }
+                .buttonStyle(.bordered)
+
                 Button(role: .destructive) {
                     model.cancelAll()
                 } label: {
@@ -171,6 +178,37 @@ final class DemoViewModel {
                         domain: "DemoError",
                         code: 42,
                         userInfo: [NSLocalizedDescriptionKey: "Something went wrong in the failing step"]
+                    )
+                }
+            }
+        }
+    }
+
+    func startRetryableFailingTask() {
+        Task {
+            let _ = await executor.addTask(
+                name: "Retryable Task \(UUID().uuidString.prefix(4))",
+                options: .interactive.retryable()
+            ) { context in
+                try await context.report(.named("Starting..."))
+                try await Task.sleep(for: .milliseconds(300))
+
+                try await context.push("Step 1") { stepContext in
+                    try await stepContext.report(.named("Step 1 in progress..."))
+                    try await Task.sleep(for: .milliseconds(200))
+                    try await stepContext.report(.progress(0.5))
+                }
+
+                try await context.report(.progress(0.3))
+
+                // This subtask will fail
+                try await context.push("Failing Step") { stepContext in
+                    try await stepContext.report(.named("About to fail..."))
+                    try await Task.sleep(for: .milliseconds(200))
+                    throw NSError(
+                        domain: "DemoError",
+                        code: 42,
+                        userInfo: [NSLocalizedDescriptionKey: "Something went wrong - try clicking retry!"]
                     )
                 }
             }

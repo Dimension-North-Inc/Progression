@@ -12,6 +12,7 @@
 - **Progress Reporting** - Report named steps and numerical progress (0.0 to 1.0)
 - **Cooperative Cancellation** - Leverages Swift's native Task cancellation model
 - **Pause/Resume** - Pause tasks and all their children simultaneously
+- **Retry** - Re-run failed or cancelled tasks with a single click
 - **Error Propagation** - Errors in subtasks propagate to parent tasks
 - **SwiftUI Integration** - Ready-to-use views for displaying task progress
 
@@ -182,6 +183,15 @@ public actor TaskExecutor {
     /// Cancels a task
     public func cancel(taskID: String)
 
+    /// Retries a failed or cancelled task (requires `canRetry` option)
+    public func retry(taskID: String) async -> String?
+
+    /// Removes a failed or cancelled task
+    public func remove(taskID: String)
+
+    /// Cancels all tasks
+    public func cancelAll()
+
     /// Async stream of task graph updates
     public nonisolated var progressStream: AsyncStream<TaskGraph>
 }
@@ -226,21 +236,38 @@ try await context.report(.step(3, of: 10))
 Configures task behavior with fluent API for composition:
 
 ```swift
-/// Default: cancellable, not pausable
+/// Default: cancellable, not pausable, not retryable
 TaskOptions.default
 
-/// Fully interactive: both cancellable and pausable
+/// Fully interactive: cancellable, pausable, not retryable
 TaskOptions.interactive
 
-/// Immutable: cannot be cancelled or paused
+/// Immutable: cannot be cancelled, paused, or retried
 TaskOptions.immutable
 
 /// Custom with fluent API
 TaskOptions.default
     .cancellable(false)
     .pausable(true)
+    .retryable(true)
     .timeout(.seconds(30))
 ```
+
+#### Retry Support
+
+Tasks can be configured to allow retry after failure or cancellation:
+
+```swift
+await executor.addTask(
+    name: "Network Request",
+    options: TaskOptions.default.retryable()
+) { context in
+    try await fetchData()
+}
+// If it fails, a retry button appears in the UI
+```
+
+When a task with `canRetry: true` fails or is cancelled, the UI displays a retry button (arrow icon) that allows users to re-execute the task. The task maintains the same ID when retried.
 
 #### Timeout Support
 
