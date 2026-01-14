@@ -1,17 +1,19 @@
-# Progression
+# Progression: Hierarchical Task Execution for Swift
 
-A Swift package for managing hierarchical task execution with progress tracking, cancellation, and pause/resume support.
+**Progression** is a type-safe, actor-based Swift package for managing hierarchical task execution with progress tracking, cooperative cancellation, and pause/resume support.
 
-## Overview
+## Key Features
 
-Progression provides a type-safe, actor-based system for:
+- **Hierarchical Tasks** - Tasks can have nested subtasks with automatic progress aggregation
+- **Progress Reporting** - Report named steps and numerical progress (0.0 to 1.0)
+- **Cooperative Cancellation** - Leverages Swift's native Task cancellation model
+- **Pause/Resume** - Pause tasks and all their children simultaneously
+- **Error Propagation** - Errors in subtasks propagate to parent tasks
+- **SwiftUI Integration** - Ready-to-use views for displaying task progress
 
-- **Hierarchical Tasks**: Tasks can have nested subtasks with automatic progress aggregation
-- **Progress Reporting**: Report named steps and numerical progress (0.0 to 1.0)
-- **Cancellation**: Safely cancel running tasks at any level
-- **Pause/Resume**: Pause tasks and all their children simultaneously
-- **Error Propagation**: Errors in subtasks propagate to parent tasks
-- **SwiftUI Integration**: Ready-to-use views for displaying task progress
+## Core Concept
+
+The central types are ``TaskExecutor`` (an actor that manages all tasks) and ``TaskContext`` (passed to your task functions for progress reporting). Tasks can have nested subtasks via ``TaskContext/push(_:_:)``, and progress is automatically aggregated from children to parents.
 
 ## Installation
 
@@ -320,4 +322,4 @@ All task management operations are thread-safe:
 
 ## License
 
-MIT License - see LICENSE file for details.
+Released under the MIT License - see LICENSE file for details.
