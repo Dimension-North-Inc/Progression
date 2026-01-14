@@ -22,10 +22,6 @@ final class TaskContextImpl: @unchecked Sendable, TaskContext {
         try await executor?.reportInternal(taskID: taskID, progress)
     }
 
-    nonisolated func checkCancellation() async throws {
-        try await executor?.checkCancellationInternal(taskID: taskID)
-    }
-
     nonisolated func push(
         _ name: String,
         _ step: @escaping @Sendable (any TaskContext) async throws -> Void
@@ -41,6 +37,7 @@ final class TaskContextImpl: @unchecked Sendable, TaskContext {
 public actor TaskExecutor {
     private var tasks: [UUID: TaskNode] = [:]
     private var currentNodeID: UUID?
+    private var swiftTasks: [UUID: Task<Void, Never>] = [:]
 
     private var pauseContinuations: [UUID: CheckedContinuation<Void, Never>] = [:]
     private var streamContinuations: [UUID: AsyncStream<TaskGraph>.Continuation] = [:]
@@ -81,7 +78,7 @@ public actor TaskExecutor {
         await broadcastGraph()
 
         // Run the task in background
-        Task {
+        let swiftTask = Task {
             let context = TaskContextImpl(executor: self, taskID: taskID)
             do {
                 try await task(context)
@@ -95,6 +92,7 @@ public actor TaskExecutor {
                     taskNode.status = .failed(error)
                 }
             }
+            swiftTasks.removeValue(forKey: taskID)
             currentNodeID = nil
             await broadcastGraph()
 
@@ -102,6 +100,7 @@ public actor TaskExecutor {
             scheduleCleanup()
         }
 
+        swiftTasks[taskID] = swiftTask
         return taskID
     }
 
@@ -145,6 +144,9 @@ public actor TaskExecutor {
         task.isPaused = false
         cancelChildren(of: task)
 
+        // Cancel the underlying Swift Task (enables Task.isCancelled checks)
+        swiftTasks[taskID]?.cancel()
+
         // Only resume waiting tasks if this was the one waiting
         if let continuation = pauseContinuations.removeValue(forKey: taskID) {
             continuation.resume()
@@ -158,6 +160,7 @@ public actor TaskExecutor {
             // Only remove if still cancelled (not restarted)
             if case .cancelled = task.status {
                 tasks.removeValue(forKey: taskID)
+                swiftTasks.removeValue(forKey: taskID)
                 await broadcastGraph()
             }
         }
@@ -270,7 +273,11 @@ public actor TaskExecutor {
     fileprivate func reportInternal(taskID: UUID, _ progress: TaskProgress) async throws {
         guard let task = findTask(id: taskID) else { return }
 
-        // Check if cancelled
+        // Check for cancellation - both Swift Task and Progression status
+        // Swift Task cancellation is cooperative and enables Task.isCancelled checks
+        if Task.isCancelled {
+            throw CancellationError()
+        }
         if task.options.isCancellable, task.status == .cancelled {
             throw CancellationError()
         }
@@ -282,6 +289,9 @@ public actor TaskExecutor {
                 pauseContinuations[taskID] = continuation
             }
             // After resuming, re-check cancelled status
+            if Task.isCancelled {
+                throw CancellationError()
+            }
             if task.options.isCancellable, task.status == .cancelled {
                 throw CancellationError()
             }
@@ -296,14 +306,6 @@ public actor TaskExecutor {
         }
 
         await broadcastGraph()
-    }
-
-    /// Internal method to check for cancellation.
-    fileprivate func checkCancellationInternal(taskID: UUID) async throws {
-        guard let task = findTask(id: taskID) else { return }
-        if task.options.isCancellable, task.status == .cancelled {
-            throw CancellationError()
-        }
     }
 
     /// Finds a task by ID, searching top-level tasks and all children recursively.
