@@ -22,6 +22,14 @@ public protocol TaskContext: AnyObject, Sendable {
     /// - Throws: `CancellationError` if the stream is cancelled
     func report(_ progress: TaskProgress) async throws
 
+    /// Checks if the task has been cancelled and throws if so.
+    ///
+    /// Use this method to cooperatively check for cancellation during
+    /// long-running work that doesn't otherwise report progress.
+    ///
+    /// - Throws: `CancellationError` if the task was cancelled
+    func checkCancellation() async throws
+
     /// Begins a nested subtask and awaits its completion.
     ///
     /// The subtask runs asynchronously and its progress is tracked

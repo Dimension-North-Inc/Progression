@@ -287,41 +287,45 @@ final class ProgressionTests: XCTestCase {
         XCTAssertEqual(tasks.first?.name, "Another Task")
     }
 
-//    func testProgressStream() async throws {
-//        let executor = TaskExecutor()
-//        let updates = Locked<[TaskGraph]>([])
-//
-//        let task = Task { @Sendable in
-//            for await graph in executor.progressStream {
-//                updates.withValue { $0.append(graph) }
-//
-//                // Stop after we have enough updates
-//                if let lastTask = graph.tasks.last,
-//                   lastTask.isCompleted {
-//                    break
-//                }
-//            }
-//        }
-//
-//        // Start a task
-//        await executor.addTask(
-//            name: "Test Task",
-//            options: .default
-//        ) { context in
-//            try await context.report(.progress(0.25))
-//            try await context.report(.progress(0.5))
-//            try await context.report(.progress(1.0))
-//        }
-//
-//        await task.value
-//
-//        let allUpdates = updates.value
-//        XCTAssertGreaterThan(allUpdates.count, 0)
-//        if let lastUpdate = allUpdates.last {
-//            XCTAssertEqual(lastUpdate.tasks.count, 1)
-//            XCTAssertEqual(lastUpdate.tasks.first?.progress, 1.0)
-//        }
-//    }
+    func testProgressStream() async throws {
+        let executor = TaskExecutor()
+        let updates = Locked<[TaskGraph]>([])
+
+        let task = Task { @Sendable in
+            for await graph in executor.progressStream {
+                updates.withValue { $0.append(graph) }
+
+                // Stop after we have enough updates
+                if let lastTask = graph.tasks.last,
+                   lastTask.isCompleted {
+                    break
+                }
+            }
+        }
+
+        // Start a task
+        await executor.addTask(
+            name: "Test Task",
+            options: .default
+        ) { context in
+            // IMPORTANT: give testing time to configure
+            // itself to be able to receive all three reports
+            try await Task.sleep(for: .seconds(1))
+
+            try await context.report(.progress(0.25))
+            try await context.report(.progress(0.5))
+            try await context.report(.progress(1.0))
+        }
+
+        await task.value
+
+        let allUpdates = updates.value
+        XCTAssertGreaterThan(allUpdates.count, 0)
+        if let lastUpdate = allUpdates.last {
+            XCTAssertEqual(lastUpdate.tasks.count, 1)
+            XCTAssertEqual(lastUpdate.tasks.first?.progress, 1.0)
+        }
+    }
 
     func testComplexMultiStepTask() async throws {
         let executor = TaskExecutor()

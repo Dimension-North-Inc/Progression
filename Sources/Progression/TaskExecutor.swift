@@ -22,6 +22,10 @@ final class TaskContextImpl: @unchecked Sendable, TaskContext {
         try await executor?.reportInternal(taskID: taskID, progress)
     }
 
+    nonisolated func checkCancellation() async throws {
+        try await executor?.checkCancellationInternal(taskID: taskID)
+    }
+
     nonisolated func push(
         _ name: String,
         _ step: @escaping @Sendable (any TaskContext) async throws -> Void
@@ -292,6 +296,14 @@ public actor TaskExecutor {
         }
 
         await broadcastGraph()
+    }
+
+    /// Internal method to check for cancellation.
+    fileprivate func checkCancellationInternal(taskID: UUID) async throws {
+        guard let task = findTask(id: taskID) else { return }
+        if task.options.isCancellable, task.status == .cancelled {
+            throw CancellationError()
+        }
     }
 
     /// Finds a task by ID, searching top-level tasks and all children recursively.
