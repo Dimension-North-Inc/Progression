@@ -1,12 +1,10 @@
 # Progression: Hierarchical Task Execution for Swift
 
+[![Swift Version](https://img.shields.io/badge/Swift-6.0+-orange.svg)](https://swift.org)
+[![Platforms](https://img.shields.io/badge/Platforms-macOS%2015.0+%7C%20iOS%2018.0+-blue.svg)](https://developer.apple.com/swift/)
+[![License](https://img.shields.io/badge/License-MIT-lightgrey.svg)](https://opensource.org/licenses/MIT)
+
 **Progression** is a type-safe, actor-based Swift package for managing hierarchical task execution with progress tracking, cooperative cancellation, and pause/resume support.
-
----
-
-**Swift:** 6.0+ | **Platforms:** macOS 15.0+, iOS 18.0+ | **License:** MIT
-
----
 
 ## Key Features
 
@@ -328,4 +326,4 @@ All task management operations are thread-safe:
 
 ## License
 
-Released under the MIT License - see LICENSE file for details.
+Progression is released under the MIT license. See LICENSE for details.
