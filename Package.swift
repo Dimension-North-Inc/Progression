@@ -32,7 +32,8 @@ let package = Package(
     targets: [
         .target(
             name: "Progression",
-            dependencies: []
+            dependencies: [],
+            resources: [.process("Resources")]
         ),
         .target(
             name: "ProgressionUI",

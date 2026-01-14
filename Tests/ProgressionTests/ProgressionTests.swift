@@ -577,6 +577,69 @@ final class ProgressionTests: XCTestCase {
         }
     }
 
+    func testTaskTimeout() async throws {
+        let executor = TaskExecutor()
+
+        await executor.addTask(
+            name: "Long Running Task",
+            options: TaskOptions(isCancellable: true, isPausable: false, timeout: .milliseconds(100))
+        ) { _ in
+            // Simulate a long-running task
+            try await Task.sleep(for: .seconds(10))
+        }
+
+        // Wait for timeout to trigger
+        try await Task.sleep(for: .milliseconds(200))
+
+        let tasks = await executor.allTasks
+        XCTAssertEqual(tasks.count, 1)
+
+        // Task should be failed with timeout error
+        if case .failed(let error) = tasks.first?.status {
+            XCTAssertTrue(error is TaskTimeoutError)
+        } else {
+            XCTFail("Task should be failed with timeout, but was \(String(describing: tasks.first?.status))")
+        }
+    }
+
+    func testTaskOptionsWithDuration() {
+        // Test various Duration expressions
+        let options1 = TaskOptions(timeout: .seconds(30))
+        let options2 = TaskOptions(timeout: .milliseconds(500))
+
+        XCTAssertEqual(options1.timeout, .seconds(30))
+        XCTAssertEqual(options2.timeout, .milliseconds(500))
+    }
+
+    func testTaskTimeoutErrorLocalization() {
+        // Test that TaskTimeoutError provides localized description
+        let error = TaskTimeoutError(taskID: "test-task", timeout: .seconds(30))
+        XCTAssertNotNil(error.errorDescription)
+        XCTAssertTrue(error.errorDescription!.contains("30"))
+    }
+
+    func testProgressionErrorLocalization() {
+        // Test cancelled error
+        let cancelledError = ProgressionError.cancelled
+        XCTAssertNotNil(cancelledError.errorDescription)
+
+        // Test invalid progress value
+        let invalidProgressError = ProgressionError.invalidProgressValue(1.5)
+        XCTAssertNotNil(invalidProgressError.errorDescription)
+
+        // Test subtask failed with localized error
+        struct LocalizedTestError: Error, LocalizedError {
+            var errorDescription: String? { "Network unavailable" }
+        }
+        let subtaskError1 = ProgressionError.subtaskFailed(underlying: LocalizedTestError())
+        XCTAssertEqual(subtaskError1.errorDescription, "Subtask failed: Network unavailable")
+
+        // Test subtask failed with non-localized error
+        struct PlainTestError: Error {}
+        let subtaskError2 = ProgressionError.subtaskFailed(underlying: PlainTestError())
+        XCTAssertEqual(subtaskError2.errorDescription, "Subtask failed")
+    }
+
     // MARK: - Helpers
 
     private func statusToString(_ status: TaskStatus?) -> String {

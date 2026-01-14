@@ -8,6 +8,12 @@
 
 import Foundation
 
+/// Helper class to hold a task reference for timeout cancellation.
+/// This avoids the closure capture issue when a task needs to cancel itself.
+final class TaskHolder: @unchecked Sendable {
+    var task: Task<Void, Never>?
+}
+
 /// Internal implementation of TaskContext that delegates to the executor actor.
 final class TaskContextImpl: @unchecked Sendable, TaskContext {
     private weak var executor: TaskExecutor?
@@ -60,7 +66,7 @@ public actor TaskExecutor {
     /// - Parameters:
     ///   - name: Display name for the task
     ///   - id: Optional unique identifier. A UUID string is generated if not provided.
-    ///   - options: Task execution options (cancellable, pausable)
+    ///   - options: Task execution options (cancellable, pausable, timeout)
     ///   - task: The async task to execute
     /// - Returns: The ID of the added task
     @discardableResult
@@ -80,17 +86,32 @@ public actor TaskExecutor {
         // Broadcast initial state
         await broadcastGraph()
 
-        // Run the task in background
-        let swiftTask = Task {
+        // Capture the task in a wrapper for timeout cancellation
+        let taskHolder = TaskHolder()
+        taskHolder.task = Task {
             let context = TaskContextImpl(executor: self, taskID: taskID)
             do {
+                // If a timeout is configured, start a timeout watcher
+                if let timeout = options.timeout {
+                    Task {
+                        try? await Task.sleep(for: timeout)
+                        // Timeout expired - cancel the task
+                        taskHolder.task?.cancel()
+                    }
+                }
+
                 try await task(context)
                 taskNode.status = .completed
                 taskNode.progress = 1.0
                 taskNode.completedAt = Date()
             } catch {
                 if isCancellationError(error) {
-                    taskNode.status = .cancelled
+                    // Check if this was a timeout
+                    if taskNode.status != .cancelled && options.timeout != nil {
+                        taskNode.status = .failed(TaskTimeoutError(taskID: taskID, timeout: options.timeout!))
+                    } else {
+                        taskNode.status = .cancelled
+                    }
                 } else {
                     taskNode.status = .failed(error)
                 }
@@ -103,7 +124,7 @@ public actor TaskExecutor {
             scheduleCleanup()
         }
 
-        swiftTasks[taskID] = swiftTask
+        swiftTasks[taskID] = taskHolder.task!
         return taskID
     }
 
@@ -123,7 +144,7 @@ public actor TaskExecutor {
 
     /// Resumes a specific task and all its children.
     public func resume(taskID: String) {
-        guard let task = tasks[taskID] else { return }
+        guard let task = tasks[taskID], task.options.isPausable else { return }
         resumeRecursive(task)
         Task { await broadcastGraph() }
     }
@@ -134,8 +155,19 @@ public actor TaskExecutor {
         if let continuation = pauseContinuations.removeValue(forKey: node.id) {
             continuation.resume()
         }
+        // Recursively resume children and clean up their continuations
         for child in node.children {
             resumeRecursive(child)
+        }
+    }
+
+    /// Removes orphaned continuations for a task and all its children.
+    private func cleanupContinuations(for node: TaskNode) {
+        if let continuation = pauseContinuations.removeValue(forKey: node.id) {
+            continuation.resume()
+        }
+        for child in node.children {
+            cleanupContinuations(for: child)
         }
     }
 
@@ -150,10 +182,8 @@ public actor TaskExecutor {
         // Cancel the underlying Swift Task (enables Task.isCancelled checks)
         swiftTasks[taskID]?.cancel()
 
-        // Only resume waiting tasks if this was the one waiting
-        if let continuation = pauseContinuations.removeValue(forKey: taskID) {
-            continuation.resume()
-        }
+        // Clean up any orphaned continuations for this task and children
+        cleanupContinuations(for: task)
 
         Task { await broadcastGraph() }
 
@@ -178,10 +208,8 @@ public actor TaskExecutor {
         task.isPaused = false
         cancelChildren(of: task)
 
-        // Only resume waiting tasks if this was the one waiting
-        if let continuation = pauseContinuations.removeValue(forKey: taskID) {
-            continuation.resume()
-        }
+        // Clean up any orphaned continuations for this task and children
+        cleanupContinuations(for: task)
 
         // Remove immediately
         tasks.removeValue(forKey: taskID)
@@ -195,9 +223,10 @@ public actor TaskExecutor {
                 task.status = .cancelled
                 task.isPaused = false
                 cancelChildren(of: task)
+                // Clean up orphaned continuations
+                cleanupContinuations(for: task)
             }
         }
-        resumeWaitingTasks()
         Task { await broadcastGraph() }
     }
 
@@ -409,41 +438,110 @@ public actor TaskExecutor {
         }
     }
 
-    private func resumeWaitingTasks() {
-        for (_, continuation) in pauseContinuations {
-            continuation.resume()
-        }
-        pauseContinuations.removeAll()
-    }
-
     private func isCancellationError(_ error: Error) -> Bool {
         error is CancellationError
     }
 }
 
-/// Represents the complete task graph state.
+/// Represents the complete state of all tasks managed by a ``TaskExecutor``.
+///
+/// The task graph provides a consistent, immutable snapshot of the entire
+/// task hierarchy at a point in time. This is useful for UI rendering or
+/// logging where you need a stable view of the task state.
+///
+/// You receive ``TaskGraph`` instances through the ``TaskExecutor/progressStream``
+/// async stream, which emits a new graph whenever any task state changes.
+///
+/// ```swift
+/// for await graph in executor.progressStream {
+///     print("Active tasks: \(graph.tasks.count)")
+///     for task in graph.tasks {
+///         print("  - \(task.name): \(task.progress ?? 0)%")
+///     }
+/// }
+/// ```
 public struct TaskGraph: Sendable {
+    /// All tasks managed by the executor, sorted by creation time (oldest first).
     public let tasks: [TaskSnapshot]
 
+    /// Creates a new task graph.
+    /// - Parameter tasks: The tasks to include in the graph.
     public init(tasks: [TaskSnapshot]) {
         self.tasks = tasks
     }
 }
 
-/// A snapshot of a task node for the UI.
+/// A snapshot of a task node for UI rendering and state observation.
+///
+/// ``TaskSnapshot`` captures the state of a task at a specific moment in time.
+/// Unlike ``TaskNode``, which is an internal mutable representation, snapshots
+/// are immutable and safe to use from any thread.
+///
+/// Snapshots form a tree structure: each snapshot can have child snapshots
+/// representing subtasks created with ``TaskContext/push(_:_:)``.
+///
+/// ## Thread Safety
+///
+/// All properties on ``TaskSnapshot`` are immutable, making it safe to access
+/// from any thread without additional synchronization.
+///
+/// ## Equality
+///
+/// Two snapshots are considered equal if their progress-affecting fields match.
+/// Use ``progressHash`` to detect changes in progress, and ``identityHash``
+/// for set membership operations based on task identity alone.
 public struct TaskSnapshot: Identifiable, Sendable, Equatable {
+    /// The unique identifier for this task.
+    ///
+    /// This matches the ID passed to ``TaskExecutor/addTask(name:id:options:_:)``
+    /// or auto-generated if not provided.
     public let id: String
+
+    /// The display name for the task.
     public let name: String
+
+    /// The current progress value, from 0.0 to 1.0.
+    ///
+    /// Returns `nil` if progress is indeterminate (task hasn't reported progress yet).
+    /// Values are clamped to the valid range and never exceed 1.0.
     public let progress: Float?
+
+    /// The current step name or phase description.
+    ///
+    /// This provides additional context about what the task is currently doing,
+    /// such as "Downloading file 3 of 10" or "Parsing records...".
     public let stepName: String?
+
+    /// The current execution status.
     public let status: TaskStatus
+
+    /// The task's execution options.
+    ///
+    /// Indicates whether the task can be paused or cancelled.
     public let options: TaskOptions
+
+    /// A Boolean value indicating whether the task is currently paused.
     public let isPaused: Bool
+
+    /// Child task snapshots representing subtasks.
+    ///
+    /// These are created via ``TaskContext/push(_:_:)`` and are sorted
+    /// by creation time (oldest first).
     public let children: [TaskSnapshot]
+
+    /// The date when this task completed, or `nil` if not yet completed.
     public let completedAt: Date?
+
+    /// The date when this task was created.
+    ///
+    /// Used for stable ordering of tasks in the UI.
     public let createdAt: Date
+
+    /// A description of the error if the task failed, or `nil`.
     public let errorDescription: String?
 
+    /// Creates a snapshot from a task node.
+    /// - Parameter node: The task node to snapshot.
     public init(from node: TaskNode) {
         self.id = node.id
         self.name = node.name
@@ -476,26 +574,43 @@ public struct TaskSnapshot: Identifiable, Sendable, Equatable {
         return nil
     }
 
+    /// A Boolean value indicating whether the task completed successfully.
     public var isCompleted: Bool {
         if case .completed = status { return true }
         return false
     }
 
+    /// A Boolean value indicating whether the task failed with an error.
     public var isFailed: Bool {
         if case .failed = status { return true }
         return false
     }
 
+    /// A Boolean value indicating whether the task is currently executing.
     public var isRunning: Bool {
         if case .running = status { return true }
         return false
     }
 
+    /// A Boolean value indicating whether the task has any child subtasks.
     public var hasChildren: Bool {
         !children.isEmpty
     }
 
     /// Returns a hash value for all progress-affecting fields.
+    ///
+    /// Use this property to detect meaningful changes in progress state
+    /// for UI update optimization. The hash includes:
+    /// - Task identity (id, createdAt)
+    /// - Progress value
+    /// - Status
+    /// - Pause state
+    /// - Step name
+    /// - Error description
+    /// - All children's progress hashes
+    ///
+    /// If two snapshots have the same progressHash, they represent
+    /// the same visual state.
     public var progressHash: Int {
         var hash = id.hashValue
         hash ^= createdAt.timeIntervalSince1970.hashValue
@@ -518,7 +633,11 @@ public struct TaskSnapshot: Identifiable, Sendable, Equatable {
         return hash
     }
 
-    /// Hash for set membership - only considers the node's identity
+    /// Hash for set membership - considers only the task's identity.
+    ///
+    /// Unlike ``progressHash``, this only includes the task's ID, making it
+    /// suitable for deduplication or tracking task identity in collections
+    /// where you don't care about state changes.
     public var identityHash: Int {
         id.hashValue
     }

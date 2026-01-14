@@ -1,0 +1,14 @@
+/* Cancellation error message */
+"error.cancelled" = "Task was cancelled";
+
+/* Subtask failed with underlying error */
+"error.subtaskFailed" = "Subtask failed: %@";
+
+/* Subtask failed without underlying error details */
+"error.subtaskFailed.generic" = "Subtask failed";
+
+/* Invalid progress value error */
+"error.invalidProgressValue" = "Invalid progress value";
+
+/* Timeout error message */
+"error.timeout" = "Task timed out after %@";

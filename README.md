@@ -223,7 +223,7 @@ try await context.report(.step(3, of: 10))
 
 ### TaskOptions
 
-Configures task behavior:
+Configures task behavior with fluent API for composition:
 
 ```swift
 /// Default: cancellable, not pausable
@@ -235,9 +235,31 @@ TaskOptions.interactive
 /// Immutable: cannot be cancelled or paused
 TaskOptions.immutable
 
-/// Custom options
-TaskOptions(isCancellable: true, isPausable: true)
+/// Custom with fluent API
+TaskOptions.default
+    .cancellable(false)
+    .pausable(true)
+    .timeout(.seconds(30))
 ```
+
+#### Timeout Support
+
+Tasks can have a maximum execution duration:
+
+```swift
+await executor.addTask(
+    name: "Network Request",
+    options: TaskOptions.default.timeout(.seconds(30))
+) { context in
+    // If this takes > 30 seconds, throws TaskTimeoutError
+    try await fetchData()
+}
+```
+
+Use `Duration` for natural time expressions:
+- `.seconds(30)`
+- `.minutes(5)`
+- `.milliseconds(500)`
 
 ### TaskSnapshot
 
@@ -328,6 +350,67 @@ try await context.push("Risky Operation") { subContext in
 ```
 
 Failed tasks display their error message and require manual dismissal.
+
+### Error Localization
+
+All Progression error types conform to `LocalizedError`, providing user-facing error messages that are automatically localized. The following errors are supported:
+
+- `ProgressionError.cancelled` → "Task was cancelled"
+- `ProgressionError.invalidProgressValue` → "Invalid progress value"
+- `ProgressionError.subtaskFailed(underlying:)` → Uses underlying error's `localizedDescription` if available
+- `TaskTimeoutError` → "Task timed out after 30 seconds" (duration is locale-aware)
+
+#### Making Your Custom Errors Localizable
+
+If your tasks throw custom errors, you can provide localized messages by conforming to `LocalizedError`:
+
+```swift
+import Foundation
+
+enum MyAppError: Error, LocalizedError {
+    case networkUnavailable
+    case fileNotFound(String)
+    case validationFailed(String)
+
+    var errorDescription: String? {
+        switch self {
+        case .networkUnavailable:
+            return NSLocalizedString("Network is unavailable", comment: "")
+        case .fileNotFound(let name):
+            return NSLocalizedString("File not found: \(name)", comment: "")
+        case .validationFailed(let reason):
+            return NSLocalizedString("Validation failed: \(reason)", comment: "")
+        }
+    }
+}
+```
+
+When thrown from a task, Progression will automatically use your `errorDescription`:
+
+```swift
+try await context.push("Save Data") { _ in
+    guard saveData() else {
+        throw MyAppError.networkUnavailable
+    }
+}
+// Error shows: "Subtask failed: Network is unavailable"
+```
+
+#### Adding Translations
+
+Progression uses `.strings` files for translations. To add translations, create localized resource directories:
+
+```
+Sources/Progression/
+├── Resources/
+│   ├── Errors.strings           // Base (English)
+│   ├── es.lproj/
+│   │   └── Errors.strings       // Spanish
+│   └── ja.lproj/
+│       └── Errors.strings       // Japanese
+```
+
+The framework's error messages will automatically use the appropriate localization based on the device's locale settings.
 
 ## Advanced Usage
 
