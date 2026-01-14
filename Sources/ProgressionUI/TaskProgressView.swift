@@ -185,49 +185,45 @@ private struct ListTaskRow<Content: View>: View {
     public let content: (TaskSnapshot) -> Content
 
     public var body: some View {
-        HStack(spacing: 0) {
-            // Main content
-            VStack(alignment: .leading) {
-                // Custom content
+        Grid(horizontalSpacing: 0, verticalSpacing: 0) {
+            // Parent row
+            GridRow {
+                // Task content column
                 content(task)
+                    .gridColumnAlignment(.leading)
                     .padding(.leading, CGFloat(depth) * INDENT)
+                    .padding(.trailing, depth == 0 ? 8 : 0)
 
-                // Subtasks (hide all if parent has failed)
-                if !task.isFailed && !task.children.isEmpty {
-                    VStack(alignment: .leading, spacing: 0) {
-                        ForEach(task.children.filter { !$0.isFailed }) { child in
-                            ListSubtaskRow(
-                                child: child,
-                                depth: depth + 1,
-                                executor: executor,
-                                content: content
-                            )
-                            .id(child.id)
-                            .transition(
-                                .asymmetric(
-                                    insertion: .opacity.combined(with: .move(edge: .top)),
-                                    removal: .opacity
-                                ))
-                        }
-                    }
-                    .padding(.leading, INDENT)
-                    .animation(
-                        .easeInOut(duration: 0.2), value: task.children.map { $0.progressHash })
+                // Action buttons column (only for top-level, aligned with parent)
+                if depth == 0 {
+                    listActionButtons
+                        .gridColumnAlignment(.trailing)
+                        .frame(width: 80)
                 }
             }
+            .padding(.vertical, 4)
 
-            Spacer()
-            
-            // Action buttons gutter (only for top-level tasks, pinned to top)
-            if depth == 0 {
-                listActionButtons
-                    .frame(width: 40, alignment: .trailing)
-                    .frame(maxHeight: .infinity, alignment: .top)
-//                    .padding(.top, 4)
+            // Child rows
+            if !task.isFailed && !task.children.isEmpty {
+                ForEach(task.children.filter { !$0.isFailed }) { child in
+                    GridRow {
+                        SubtaskRowContent(
+                            child: child,
+                            depth: depth + 1,
+                            content: content
+                        )
+                        .id(child.id)
+                        .transition(
+                            .asymmetric(
+                                insertion: .opacity.combined(with: .move(edge: .top)),
+                                removal: .opacity))
+                    }
+                    .padding(.vertical, 2)
+                }
+                .animation(
+                    .easeInOut(duration: 0.2), value: task.children.map { $0.progressHash })
             }
         }
-        .padding(.vertical, 4)
-        .padding(.trailing, depth == 0 ? 8 : 0)
     }
 
     /// The action buttons for the task.
@@ -291,6 +287,40 @@ private struct ListTaskRow<Content: View>: View {
                 }
                 .buttonStyle(.plain)
                 .foregroundStyle(.secondary)
+            }
+        }
+    }
+}
+
+/// Renders subtask content within a grid row.
+@MainActor
+private struct SubtaskRowContent<Content: View>: View {
+    public let child: TaskSnapshot
+    public let depth: Int
+    public let content: (TaskSnapshot) -> Content
+
+    public var body: some View {
+        VStack(alignment: .leading, spacing: 3) {
+            content(child)
+                .padding(.leading, CGFloat(depth) * INDENT)
+
+            // Grandchildren
+            if !child.isFailed && !child.children.isEmpty {
+                ForEach(child.children.filter { !$0.isFailed }) { grandchild in
+                    SubtaskRowContent(
+                        child: grandchild,
+                        depth: depth + 1,
+                        content: content
+                    )
+                    .id(grandchild.id)
+                    .transition(
+                        .asymmetric(
+                            insertion: .opacity.combined(with: .move(edge: .top)),
+                            removal: .opacity))
+                }
+                .padding(.leading, INDENT)
+                .animation(
+                    .easeInOut(duration: 0.2), value: child.children.map { $0.progressHash })
             }
         }
     }
