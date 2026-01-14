@@ -59,6 +59,62 @@ await executor.addTask(name: "Data Import", options: .interactive) { context in
 }
 ```
 
+## Task Author's Guide
+
+### Cancellation
+
+Progression uses Swift's native **cooperative cancellation** model. When a user cancels a task, the underlying Swift Task is cancelled, and your code can detect this in two ways:
+
+**Option 1: Use `report()` (recommended)**
+
+The `report()` method automatically checks for cancellation and throws `CancellationError` if the task was cancelled:
+
+```swift
+for file in files {
+    try await context.report(.progress(Double(i) / Double(total)))
+    process(file)  // Won't run if cancelled
+}
+```
+
+**Option 2: Manual check**
+
+Use Swift's native `Task.checkCancellation()` for work that doesn't otherwise report progress:
+
+```swift
+for file in files {
+    try Task.checkCancellation()  // Throws if cancelled
+    process(file)
+}
+
+// Or check directly:
+for file in files {
+    if Task.isCancelled { break }
+    process(file)
+}
+```
+
+**Best Practices**
+
+- Always check for cancellation during long-running work
+- Use `report()` frequently - it automatically checks cancellation
+- Use `push()` for subtasks - gives you hierarchical progress tracking
+- Catch errors from `push()` - child errors propagate to parent
+
+**What NOT to Do**
+
+```swift
+// BAD: Long operation without cancellation check
+for i in 1...10000 {
+    heavyComputation()  // Cannot be cancelled!
+}
+
+// GOOD: Check periodically
+for i in 1...10000 {
+    if i % 100 == 0 { try Task.checkCancellation() }
+    heavyComputation()
+}
+```
+
 ## Concepts
 
 ### TaskExecutor
