@@ -141,7 +141,7 @@ public struct ListLayout<RowContent: View>: View {
 
     public var body: some View {
         ScrollView {
-            LazyVStack(alignment: .leading, spacing: 4) {
+            LazyVStack(alignment: .leading) {
                 ForEach(tasks) { task in
                     ListTaskRow(
                         task: task,
@@ -165,6 +165,8 @@ public struct ListLayout<RowContent: View>: View {
 
 // MARK: - List Task Row
 
+private let INDENT: CGFloat = 8
+
 /// A row representing a single task with its subtasks.
 ///
 /// This is a private implementation detail of ``ListLayout``.
@@ -185,10 +187,10 @@ private struct ListTaskRow<Content: View>: View {
     public var body: some View {
         HStack(spacing: 0) {
             // Main content
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading) {
                 // Custom content
                 content(task)
-                    .padding(.leading, CGFloat(depth) * 8)
+                    .padding(.leading, CGFloat(depth) * INDENT)
 
                 // Subtasks (hide all if parent has failed)
                 if !task.isFailed && !task.children.isEmpty {
@@ -208,20 +210,20 @@ private struct ListTaskRow<Content: View>: View {
                                 ))
                         }
                     }
-                    .padding(.leading, 16)
+                    .padding(.leading, INDENT)
                     .animation(
                         .easeInOut(duration: 0.2), value: task.children.map { $0.progressHash })
                 }
             }
 
-            Spacer(minLength: 8)
-
+            Spacer()
+            
             // Action buttons gutter (only for top-level tasks, pinned to top)
             if depth == 0 {
                 listActionButtons
-                    .frame(width: 80, alignment: .trailing)
+                    .frame(width: 40, alignment: .trailing)
                     .frame(maxHeight: .infinity, alignment: .top)
-                    .padding(.top, 4)
+//                    .padding(.top, 4)
             }
         }
         .padding(.vertical, 4)
@@ -314,11 +316,11 @@ private struct ListSubtaskRow<Content: View>: View {
     public let content: (TaskSnapshot) -> Content
 
     public var body: some View {
-        VStack(alignment: .leading, spacing: 3) {
+        VStack(alignment: .leading/*, spacing: 3*/) {
             // Only show subtask if not failed (parent shows the error)
             if !child.isFailed {
                 content(child)
-                    .padding(.leading, CGFloat(depth) * 16)
+                    .padding(.leading, CGFloat(depth) * INDENT)
 
                 // Hide all children if this subtask has failed
                 if !child.isFailed && !child.children.isEmpty {
@@ -370,7 +372,15 @@ public struct DefaultRowContent: View {
     public init(task: TaskSnapshot) { self.task = task }
 
     public var body: some View {
-        VStack(alignment: .leading, spacing: 2) {
+        VStack(alignment: .leading, spacing: 0) {
+            if let error = task.errorDescription {
+                Text(error)
+                    .font(.caption)
+                    .foregroundStyle(.red)
+                    .padding(.top, 4)
+            } else {
+                ProgressBar(progress)
+            }
             HStack {
                 Text(task.name)
                     .fontWeight(.medium)
@@ -382,15 +392,6 @@ public struct DefaultRowContent: View {
             }
             .font(.subheadline)
             .foregroundStyle(.secondary)
-
-            if let error = task.errorDescription {
-                Text(error)
-                    .font(.caption)
-                    .foregroundStyle(.red)
-                    .padding(.top, 4)
-            } else {
-                ProgressBar(progress)
-            }
         }
     }
 
