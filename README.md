@@ -121,6 +121,42 @@ for i in 1...10000 {
 }
 ```
 
+## Pre-built Task Steps
+
+ProgressionUI provides convenient extensions for common async operations like network requests. These automatically create subtasks with progress reporting.
+
+### URLSession Extensions
+
+Fetch data or download files with automatic progress tracking:
+
+```swift
+// Simple fetch from URL
+let (data, response) = try await context.fetch(url: myURL)
+
+// Fetch with custom request
+var request = URLRequest(url: myURL)
+request.setValue("application/json", forHTTPHeaderField: "Accept")
+let (data, response) = try await context.fetch(request: request)
+
+// Download a file to temporary location
+let localURL = try await context.download(url: fileURL)
+```
+
+Each network operation creates a "Download" subtask that reports:
+- "Connecting..." when starting
+- "Downloading..." when data is received
+- "Complete" when finished
+
+For more control, use the URLSession extensions directly:
+
+```swift
+// URLSession.data(for:using:) with progress
+let (data, response) = try await URLSession.shared.data(for: request, using: context)
+
+// URLSession.download(for:using:) with progress
+let (tempURL, _) = try await URLSession.shared.download(for: request, using: context)
+```
+
 ## Concepts
 
 ### TaskExecutor
