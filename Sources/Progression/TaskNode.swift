@@ -18,7 +18,7 @@ import Foundation
 /// are managed through the ``addChild(_:)`` method.
 public final class TaskNode: @unchecked Sendable, Identifiable {
     /// The unique identifier for this task.
-    public let id: UUID
+    public let id: String
 
     /// The display name for the task.
     public var name: String
@@ -27,7 +27,7 @@ public final class TaskNode: @unchecked Sendable, Identifiable {
     private let lock = NSLock()
 
     /// The parent node's ID, if any.
-    private let parentID: UUID?
+    private let parentID: String?
 
     /// Child task nodes.
     private var _children: [TaskNode]
@@ -62,14 +62,14 @@ public final class TaskNode: @unchecked Sendable, Identifiable {
     /// Creates a new task node.
     ///
     /// - Parameters:
-    ///   - id: Unique identifier for this node. A new UUID is generated if not provided.
+    ///   - id: Unique identifier for this task. A new UUID string is generated if not provided.
     ///   - name: Display name for the task.
-    ///   - parentID: Optional parent node ID for hierarchical tracking.
+    ///   - parentID: Optional parent task ID for hierarchical tracking.
     ///   - options: Task execution options. Uses ``TaskOptions/default`` by default.
     public init(
-        id: UUID = UUID(),
+        id: String = UUID().uuidString,
         name: String,
-        parentID: UUID? = nil,
+        parentID: String? = nil,
         options: TaskOptions = .default
     ) {
         self.id = id

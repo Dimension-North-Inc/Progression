@@ -168,23 +168,26 @@ public actor TaskExecutor {
     /// Adds and starts a new task
     public func addTask(
         name: String,
+        id: String? = nil,
         options: TaskOptions = .default,
         _ task: @escaping @Sendable (any TaskContext) async throws -> Void
-    ) async -> UUID
+    ) async -> String
 
     /// Pauses a task and all its children
-    public func pause(taskID: UUID)
+    public func pause(taskID: String)
 
     /// Resumes a paused task and all its children
-    public func resume(taskID: UUID)
+    public func resume(taskID: String)
 
     /// Cancels a task
-    public func cancel(taskID: UUID)
+    public func cancel(taskID: String)
 
     /// Async stream of task graph updates
     public nonisolated var progressStream: AsyncStream<TaskGraph>
 }
 ```
+
+Tasks can be identified by a custom string ID, or a UUID string will be generated automatically.
 
 ### TaskContext
 
@@ -242,7 +245,7 @@ An immutable snapshot of task state for the UI:
 
 ```swift
 public struct TaskSnapshot: Identifiable, Sendable, Equatable {
-    public let id: UUID
+    public let id: String                // Custom ID or UUID string
     public let name: String
     public let progress: Float?        // nil = indeterminate
     public let stepName: String?

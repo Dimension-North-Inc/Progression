@@ -10,10 +10,10 @@ import Foundation
 
 /// Internal implementation of TaskContext that delegates to the executor actor.
 final class TaskContextImpl: @unchecked Sendable, TaskContext {
-    private weak let executor: TaskExecutor?
-    private let taskID: UUID
+    private weak var executor: TaskExecutor?
+    private let taskID: String
 
-    init(executor: TaskExecutor, taskID: UUID) {
+    init(executor: TaskExecutor, taskID: String) {
         self.executor = executor
         self.taskID = taskID
     }
@@ -35,11 +35,11 @@ final class TaskContextImpl: @unchecked Sendable, TaskContext {
 /// Concrete implementation of `TaskContext` that manages task execution
 /// and exposes progress updates via async streams.
 public actor TaskExecutor {
-    private var tasks: [UUID: TaskNode] = [:]
-    private var currentNodeID: UUID?
-    private var swiftTasks: [UUID: Task<Void, Never>] = [:]
+    private var tasks: [String: TaskNode] = [:]
+    private var currentNodeID: String?
+    private var swiftTasks: [String: Task<Void, Never>] = [:]
 
-    private var pauseContinuations: [UUID: CheckedContinuation<Void, Never>] = [:]
+    private var pauseContinuations: [String: CheckedContinuation<Void, Never>] = [:]
     private var streamContinuations: [UUID: AsyncStream<TaskGraph>.Continuation] = [:]
 
     /// Time in seconds to keep completed tasks before automatic cleanup.
@@ -57,17 +57,20 @@ public actor TaskExecutor {
 
     /// Adds and starts a new task asynchronously.
     ///
-    /// - Parameter name: Display name for the task
-    /// - Parameter options: Task execution options (cancellable, pausable)
-    /// - Parameter task: The async task to execute
+    /// - Parameters:
+    ///   - name: Display name for the task
+    ///   - id: Optional unique identifier. A UUID string is generated if not provided.
+    ///   - options: Task execution options (cancellable, pausable)
+    ///   - task: The async task to execute
     /// - Returns: The ID of the added task
     @discardableResult
     public func addTask(
         name: String,
+        id: String? = nil,
         options: TaskOptions = .default,
         _ task: @escaping @Sendable (any TaskContext) async throws -> Void
-    ) async -> UUID {
-        let taskNode = TaskNode(name: name, options: options)
+    ) async -> String {
+        let taskNode = TaskNode(id: id ?? UUID().uuidString, name: name, options: options)
         taskNode.status = .running
         tasks[taskNode.id] = taskNode
 
@@ -105,7 +108,7 @@ public actor TaskExecutor {
     }
 
     /// Pauses a specific task and all its children.
-    public func pause(taskID: UUID) {
+    public func pause(taskID: String) {
         guard let task = tasks[taskID], task.options.isPausable else { return }
         pauseRecursive(task)
         Task { await broadcastGraph() }
@@ -119,7 +122,7 @@ public actor TaskExecutor {
     }
 
     /// Resumes a specific task and all its children.
-    public func resume(taskID: UUID) {
+    public func resume(taskID: String) {
         guard let task = tasks[taskID] else { return }
         resumeRecursive(task)
         Task { await broadcastGraph() }
@@ -137,7 +140,7 @@ public actor TaskExecutor {
     }
 
     /// Cancels a specific task.
-    public func cancel(taskID: UUID) {
+    public func cancel(taskID: String) {
         guard let task = tasks[taskID], task.options.isCancellable else { return }
 
         task.status = .cancelled
@@ -167,7 +170,7 @@ public actor TaskExecutor {
     }
 
     /// Removes a failed or completed task immediately.
-    public func remove(taskID: UUID) {
+    public func remove(taskID: String) {
         guard let task = tasks[taskID] else { return }
 
         // Mark as cancelled
@@ -270,7 +273,7 @@ public actor TaskExecutor {
 
     // MARK: - Internal Methods
 
-    fileprivate func reportInternal(taskID: UUID, _ progress: TaskProgress) async throws {
+    fileprivate func reportInternal(taskID: String, _ progress: TaskProgress) async throws {
         guard let task = findTask(id: taskID) else { return }
 
         // Check for cancellation - both Swift Task and Progression status
@@ -309,7 +312,7 @@ public actor TaskExecutor {
     }
 
     /// Finds a task by ID, searching top-level tasks and all children recursively.
-    private func findTask(id: UUID) -> TaskNode? {
+    private func findTask(id: String) -> TaskNode? {
         // Check top-level tasks first
         if let task = tasks[id] {
             return task
@@ -323,7 +326,7 @@ public actor TaskExecutor {
         return nil
     }
 
-    private func findTaskInChildren(id: UUID, node: TaskNode) -> TaskNode? {
+    private func findTaskInChildren(id: String, node: TaskNode) -> TaskNode? {
         if node.id == id {
             return node
         }
@@ -336,7 +339,7 @@ public actor TaskExecutor {
     }
 
     fileprivate func pushInternal(
-        taskID parentID: UUID,
+        taskID parentID: String,
         name: String,
         _ step: @escaping @Sendable (any TaskContext) async throws -> Void
     ) async throws {
@@ -429,7 +432,7 @@ public struct TaskGraph: Sendable {
 
 /// A snapshot of a task node for the UI.
 public struct TaskSnapshot: Identifiable, Sendable, Equatable {
-    public let id: UUID
+    public let id: String
     public let name: String
     public let progress: Float?
     public let stepName: String?
