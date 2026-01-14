@@ -2,6 +2,12 @@
 
 **Progression** is a type-safe, actor-based Swift package for managing hierarchical task execution with progress tracking, cooperative cancellation, and pause/resume support.
 
+---
+
+**Swift:** 6.0+ | **Platforms:** macOS 15.0+, iOS 18.0+ | **License:** MIT
+
+---
+
 ## Key Features
 
 - **Hierarchical Tasks** - Tasks can have nested subtasks with automatic progress aggregation
