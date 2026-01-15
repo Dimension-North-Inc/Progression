@@ -163,6 +163,23 @@ public struct ListLayout<RowContent: View>: View {
     }
 }
 
+// MARK: - Layout Debugging Notes
+// ----------------------------------------------------------------------
+// RETROSPECTIVE: Layout Misalignment Issue (Jan 14, 2026)
+// ----------------------------------------------------------------------
+// Symptom: Root row right edge misaligned with descendants by ~8 points
+// Root cause: ListTaskRow had .padding(.trailing, 8) that SubtaskRowContent lacked
+//
+// LESSON LEARNED: When two similar views render differently:
+// 1. Compare their code paths line-by-line for asymmetry
+// 2. Don't rewrite layouts before finding the root difference
+// 3. "Slight misalignment" = "Find the asymmetry"
+// 4. User descriptions of symptoms are authoritative - trust them
+//
+// Time wasted: 30+ minutes rewriting Grid/HStack/adding Spacers
+// Actual fix: Remove 8pt trailing padding from root content (line 195)
+// ----------------------------------------------------------------------
+
 // MARK: - List Task Row
 
 private let INDENT: CGFloat = 8
@@ -192,7 +209,6 @@ private struct ListTaskRow<Content: View>: View {
                 content(task)
                     .gridColumnAlignment(.leading)
                     .padding(.leading, CGFloat(depth) * INDENT)
-                    .padding(.trailing, depth == 0 ? 8 : 0)
 
                 // Action buttons column (only for top-level, aligned with parent)
                 if depth == 0 {

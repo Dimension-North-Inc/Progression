@@ -584,9 +584,16 @@ public struct TaskSnapshot: Identifiable, Sendable, Equatable {
     /// A description of the error if the task failed, or `nil`.
     public let errorDescription: String?
 
+    /// The depth of this task in the task hierarchy.
+    ///
+    /// Root tasks have depth 0, their children have depth 1, and so on.
+    /// This is useful for custom layouts like sunburst charts or tree views.
+    public let depth: Int
+
     /// Creates a snapshot from a task node.
     /// - Parameter node: The task node to snapshot.
-    public init(from node: TaskNode) {
+    /// - Parameter depth: The depth in the hierarchy (0 for root tasks).
+    public init(from node: TaskNode, depth: Int = 0) {
         self.id = node.id
         self.name = node.name
         self.progress = node.progress
@@ -594,9 +601,12 @@ public struct TaskSnapshot: Identifiable, Sendable, Equatable {
         self.status = node.status
         self.options = node.options
         self.isPaused = node.isPaused
-        self.children = node.children.map { TaskSnapshot(from: $0) }
+        self.children = node.children.enumerated().map { index, child in
+            TaskSnapshot(from: child, depth: depth + 1)
+        }
         self.createdAt = node.createdAt
         self.errorDescription = Self.extractErrorDescription(from: node.status)
+        self.depth = depth
 
         // Record completion time if completed
         if case .completed = node.status {
@@ -694,5 +704,6 @@ public struct TaskSnapshot: Identifiable, Sendable, Equatable {
             && lhs.stepName == rhs.stepName
             && lhs.children == rhs.children
             && lhs.errorDescription == rhs.errorDescription
+            && lhs.depth == rhs.depth
     }
 }
